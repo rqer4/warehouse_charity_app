@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "261719020003",
+    "firebase_url": "https://sunny-base-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "sunny-base",
+    "storage_bucket": "sunny-base.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:261719020003:android:d22a052c9a48cd493410d6",
+        "android_client_info": {
+          "package_name": "com.example.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "261719020003-h1522mruo5h1fgou54c0hrilnbdbjkl4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgep9gA83aQKkgJOQwlmoXD8SG5h20uUg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "261719020003-h1522mruo5h1fgou54c0hrilnbdbjkl4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "261719020003-4okvcv0d4shmjmp6bmjvp18nd2jokgpj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.sunnyBase"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
