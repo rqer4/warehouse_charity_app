@@ -11,12 +11,16 @@ import 'package:synny_space/model/storage_card.dart';
 import 'package:synny_space/widgets/card_form.dart';
 
 class ItemAdding extends StatefulWidget {
-  const ItemAdding({super.key});
+  ItemAdding({super.key, this.barcode });
+
+  
 
   //final void Function(StorageCard newItem) onAddItem;
-  static const barcode = IconData(0xf586,
+  static const barcodeIcon = IconData(0xf586,
       fontFamily: CupertinoIcons.iconFont,
       fontPackage: CupertinoIcons.iconFontPackage);
+
+  String? barcode;
   @override
   State<StatefulWidget> createState() {
     return _ItemAddingState();
@@ -188,261 +192,261 @@ class _ItemAddingState extends State<ItemAdding> {
     return Scaffold(
       body: Padding(
           padding: const EdgeInsets.fromLTRB(20, 48, 20, 20),
-          child: 
-          Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        textCapitalization: TextCapitalization.sentences,
-                        //maxLength: 40,
-                        decoration: const InputDecoration(
-                          label: Text('Назва товару: '),
-                        ),
-                        validator: (value) {
-                          if (value == null ||
-                              value.isEmpty ||
-                              value.trim().length >= 50) {
-                            return 'Incorrect title';
-                          }
-                          return null;
-                        },
-                        onSaved: (value) {
-                          enteredTitle = value!;
-                        },
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 25,
-                    ),
-                    Expanded(
-                      child: DropdownButtonFormField(
-                        value: _pickedCathegory,
-                        items: (Cathegory.values)
-                            .map(
-                              (cathegory) => DropdownMenuItem(
-                                value: cathegory,
-                                child: Text(cathegory.name.toUpperCase()),
-                              ),
-                            )
-                            .toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            _pickedCathegory = value!;
-                          });
-                        },
-                      ),
-                    )
-                  ],
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        initialValue: enteredQuantity.toString(),
-                        keyboardType: TextInputType.number,
-                        maxLength: 5,
-                        decoration: const InputDecoration(
-                          label: Text('Кількість:'),
-                        ),
-                        validator: (value) {
-                          if (value == null ||
-                              value.isEmpty ||
-                              value.trim().length >= 50) {
-                            return 'Incorrect quantity';
-                          }
-                          return null;
-                        },
-                        onSaved: (value) {
-                          enteredQuantity = int.parse(value!);
-                        },
-                      ),
-                    ),
-                    const Spacer(),
-                    Expanded(
-                      child: TextFormField(
-                        initialValue: enteredMeasureValue.toString(),
-                        keyboardType: TextInputType.number,
-                        maxLength: 5,
-                        decoration: const InputDecoration(
-                          label: Text('Об\'єм:'),
-                        ),
-                        validator: (value) {
-                          if (value == null ||
-                              value.isEmpty ||
-                              value.trim().length >= 50) {
-                            return 'Incorrect Volume';
-                          }
-                          return null;
-                        },
-                        onSaved: (value) {
-                          enteredMeasureValue = double.parse(value!);
-                        },
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Expanded(
-                      child: DropdownButtonFormField(
-                        padding: const EdgeInsets.only(top: 8),
-                        value: _pickedMeasureUnit,
-                        items: MeasureUnit.values
-                            .map(
-                              (measureUnit) => DropdownMenuItem(
-                                value: measureUnit,
-                                child: Text(measureUnit.name),
-                              ),
-                            )
-                            .toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            _pickedMeasureUnit = value!;
-                          });
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      //padding: const EdgeInsets.all(20),
-                      child: selectedImageName.isEmpty
-                          ? OutlinedButton.icon(
-                              onPressed: showImageDialog,
-                              icon: const Icon(Icons.add_a_photo_outlined),
-                              label: const Text(
-                                'Add item image',
-                              ),
-                              style: OutlinedButton.styleFrom(
-                                padding: const EdgeInsets.fromLTRB(15, 0, 10, 0),
-                                fixedSize: const Size(160, 85),
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.elliptical(10, 10),
-                                  ),
-                                ),
-                                foregroundColor:
-                                    const Color.fromARGB(255, 127, 38, 210),
-                                //backgroundColor: const Color.fromARGB(255, 192, 192, 192) ,
-                              ),
-                            )
-                          : Column(
-                              children: [
-                                SizedBox(
-                                  height: 200,
-                                  width: 160,
-                                  child: Image.file(
-                                    File(file!.path),
-                                  ),
-                                ),
-                                const SizedBox(
-                                        height: 5,
-                                      ),
-                                OutlinedButton.icon(
-                                  onPressed: showImageDialog,
-                                  label: const Text('Change'),
-                                  icon: const Icon(Icons.add_a_photo_outlined),
-                                ),
-                              ],
-                            ),
-                    ),
-                    const Spacer(),
-                    Container(
-                      child: (int.tryParse(scannedBarcode) == null)
-                          ? OutlinedButton.icon(
-                              onPressed: _scanBarcode,
-                              icon: const Icon(CupertinoIcons.barcode),
-                              label: const Text('Add barcode'),
-                              style: OutlinedButton.styleFrom(
-                                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                fixedSize: const Size(160, 85),
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.elliptical(10, 10),
-                                  ),
-                                ),
-                                foregroundColor:
-                                    const Color.fromARGB(255, 127, 38, 210),
-                                //backgroundColor: Color.fromARGB(14, 83, 83, 83) ,
-                              ),
-                            )
-                          : Column(
-                              children: [
-                                SizedBox(
-                                  height: 200,
-                                  width: 160,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const Icon(
-                                        CupertinoIcons.check_mark_circled,
-                                        color: Color.fromARGB(255, 14, 150, 19),
-                                      ),
-                                      const Text(
-                                        'Code Added!\nYou can change it by pressing button below',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            color:
-                                                Color.fromARGB(255, 14, 150, 19)),
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                        'Code is: \n$scannedBarcode',
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(
-                                        height: 5,
-                                      ),
-                                OutlinedButton.icon(
-                                    onPressed: _scanBarcode,
-                                    label: const Text('Change'),
-                                    icon: const Icon(CupertinoIcons.barcode)),
-                              ],
-                            ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text('Cancel'),
-                    ),
-                    FilledButton(
-                      onPressed: onSaveItem,
-                      style: FilledButton.styleFrom(
-                          backgroundColor:
-                              const Color.fromARGB(255, 16, 104, 176)),
-                      child: const Text('Save'),
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ),
+          child: CardForm(barcode: widget.barcode,)
+          // Form(
+          //   key: _formKey,
+          //   child: Column(
+          //     children: [
+          //       Row(
+          //         children: [
+          //           Expanded(
+          //             child: TextFormField(
+          //               textCapitalization: TextCapitalization.sentences,
+          //               //maxLength: 40,
+          //               decoration: const InputDecoration(
+          //                 label: Text('Назва товару: '),
+          //               ),
+          //               validator: (value) {
+          //                 if (value == null ||
+          //                     value.isEmpty ||
+          //                     value.trim().length >= 50) {
+          //                   return 'Incorrect title';
+          //                 }
+          //                 return null;
+          //               },
+          //               onSaved: (value) {
+          //                 enteredTitle = value!;
+          //               },
+          //             ),
+          //           ),
+          //           const SizedBox(
+          //             width: 25,
+          //           ),
+          //           Expanded(
+          //             child: DropdownButtonFormField(
+          //               value: _pickedCathegory,
+          //               items: (Cathegory.values)
+          //                   .map(
+          //                     (cathegory) => DropdownMenuItem(
+          //                       value: cathegory,
+          //                       child: Text(cathegory.name.toUpperCase()),
+          //                     ),
+          //                   )
+          //                   .toList(),
+          //               onChanged: (value) {
+          //                 setState(() {
+          //                   _pickedCathegory = value!;
+          //                 });
+          //               },
+          //             ),
+          //           )
+          //         ],
+          //       ),
+          //       Row(
+          //         crossAxisAlignment: CrossAxisAlignment.start,
+          //         children: [
+          //           Expanded(
+          //             child: TextFormField(
+          //               initialValue: enteredQuantity.toString(),
+          //               keyboardType: TextInputType.number,
+          //               maxLength: 5,
+          //               decoration: const InputDecoration(
+          //                 label: Text('Кількість:'),
+          //               ),
+          //               validator: (value) {
+          //                 if (value == null ||
+          //                     value.isEmpty ||
+          //                     value.trim().length >= 50) {
+          //                   return 'Incorrect quantity';
+          //                 }
+          //                 return null;
+          //               },
+          //               onSaved: (value) {
+          //                 enteredQuantity = int.parse(value!);
+          //               },
+          //             ),
+          //           ),
+          //           const Spacer(),
+          //           Expanded(
+          //             child: TextFormField(
+          //               initialValue: enteredMeasureValue.toString(),
+          //               keyboardType: TextInputType.number,
+          //               maxLength: 5,
+          //               decoration: const InputDecoration(
+          //                 label: Text('Об\'єм:'),
+          //               ),
+          //               validator: (value) {
+          //                 if (value == null ||
+          //                     value.isEmpty ||
+          //                     value.trim().length >= 50) {
+          //                   return 'Incorrect Volume';
+          //                 }
+          //                 return null;
+          //               },
+          //               onSaved: (value) {
+          //                 enteredMeasureValue = double.parse(value!);
+          //               },
+          //             ),
+          //           ),
+          //           const SizedBox(
+          //             width: 10,
+          //           ),
+          //           Expanded(
+          //             child: DropdownButtonFormField(
+          //               padding: const EdgeInsets.only(top: 8),
+          //               value: _pickedMeasureUnit,
+          //               items: MeasureUnit.values
+          //                   .map(
+          //                     (measureUnit) => DropdownMenuItem(
+          //                       value: measureUnit,
+          //                       child: Text(measureUnit.name),
+          //                     ),
+          //                   )
+          //                   .toList(),
+          //               onChanged: (value) {
+          //                 setState(() {
+          //                   _pickedMeasureUnit = value!;
+          //                 });
+          //               },
+          //             ),
+          //           ),
+          //         ],
+          //       ),
+          //       const SizedBox(
+          //         height: 20,
+          //       ),
+          //       Row(
+          //         crossAxisAlignment: CrossAxisAlignment.center,
+          //         children: [
+          //           Container(
+          //             //padding: const EdgeInsets.all(20),
+          //             child: selectedImageName.isEmpty
+          //                 ? OutlinedButton.icon(
+          //                     onPressed: showImageDialog,
+          //                     icon: const Icon(Icons.add_a_photo_outlined),
+          //                     label: const Text(
+          //                       'Add item image',
+          //                     ),
+          //                     style: OutlinedButton.styleFrom(
+          //                       padding: const EdgeInsets.fromLTRB(15, 0, 10, 0),
+          //                       fixedSize: const Size(160, 85),
+          //                       shape: const RoundedRectangleBorder(
+          //                         borderRadius: BorderRadius.all(
+          //                           Radius.elliptical(10, 10),
+          //                         ),
+          //                       ),
+          //                       foregroundColor:
+          //                           const Color.fromARGB(255, 127, 38, 210),
+          //                       //backgroundColor: const Color.fromARGB(255, 192, 192, 192) ,
+          //                     ),
+          //                   )
+          //                 : Column(
+          //                     children: [
+          //                       SizedBox(
+          //                         height: 200,
+          //                         width: 160,
+          //                         child: Image.file(
+          //                           File(file!.path),
+          //                         ),
+          //                       ),
+          //                       const SizedBox(
+          //                               height: 5,
+          //                             ),
+          //                       OutlinedButton.icon(
+          //                         onPressed: showImageDialog,
+          //                         label: const Text('Change'),
+          //                         icon: const Icon(Icons.add_a_photo_outlined),
+          //                       ),
+          //                     ],
+          //                   ),
+          //           ),
+          //           const Spacer(),
+          //           Container(
+          //             child: (int.tryParse(scannedBarcode) == null)
+          //                 ? OutlinedButton.icon(
+          //                     onPressed: _scanBarcode,
+          //                     icon: const Icon(CupertinoIcons.barcode),
+          //                     label: const Text('Add barcode'),
+          //                     style: OutlinedButton.styleFrom(
+          //                       padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+          //                       fixedSize: const Size(160, 85),
+          //                       shape: const RoundedRectangleBorder(
+          //                         borderRadius: BorderRadius.all(
+          //                           Radius.elliptical(10, 10),
+          //                         ),
+          //                       ),
+          //                       foregroundColor:
+          //                           const Color.fromARGB(255, 127, 38, 210),
+          //                       //backgroundColor: Color.fromARGB(14, 83, 83, 83) ,
+          //                     ),
+          //                   )
+          //                 : Column(
+          //                     children: [
+          //                       SizedBox(
+          //                         height: 200,
+          //                         width: 160,
+          //                         child: Column(
+          //                           mainAxisAlignment: MainAxisAlignment.center,
+          //                           children: [
+          //                             const Icon(
+          //                               CupertinoIcons.check_mark_circled,
+          //                               color: Color.fromARGB(255, 14, 150, 19),
+          //                             ),
+          //                             const Text(
+          //                               'Code Added!\nYou can change it by pressing button below',
+          //                               textAlign: TextAlign.center,
+          //                               style: TextStyle(
+          //                                   color:
+          //                                       Color.fromARGB(255, 14, 150, 19)),
+          //                             ),
+          //                             const SizedBox(
+          //                               height: 5,
+          //                             ),
+          //                             Text(
+          //                               'Code is: \n$scannedBarcode',
+          //                               textAlign: TextAlign.center,
+          //                               style: const TextStyle(
+          //                                   fontWeight: FontWeight.bold),
+          //                             ),
+          //                           ],
+          //                         ),
+          //                       ),
+          //                       const SizedBox(
+          //                               height: 5,
+          //                             ),
+          //                       OutlinedButton.icon(
+          //                           onPressed: _scanBarcode,
+          //                           label: const Text('Change'),
+          //                           icon: const Icon(CupertinoIcons.barcode)),
+          //                     ],
+          //                   ),
+          //           ),
+          //         ],
+          //       ),
+          //       const SizedBox(
+          //         height: 15,
+          //       ),
+          //       Row(
+          //         mainAxisAlignment: MainAxisAlignment.end,
+          //         children: [
+          //           TextButton(
+          //             onPressed: () {
+          //               Navigator.pop(context);
+          //             },
+          //             child: const Text('Cancel'),
+          //           ),
+          //           FilledButton(
+          //             onPressed: onSaveItem,
+          //             style: FilledButton.styleFrom(
+          //                 backgroundColor:
+          //                     const Color.fromARGB(255, 16, 104, 176)),
+          //             child: const Text('Save'),
+          //           ),
+          //         ],
+          //       )
+          //     ],
+          //   ),
+          // ),
           ),
     );
   }

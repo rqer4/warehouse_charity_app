@@ -105,7 +105,7 @@ class _NeedsPageState extends State<NeedsPage> {
   void _openAddItemWindow() async {
     final newItem = await Navigator.of(context).push<StorageCard>(
       MaterialPageRoute(
-        builder: (ctx) => const ItemAdding(),
+        builder: (ctx) =>  ItemAdding(),
       ),
     );
     if (newItem == null) {
@@ -117,19 +117,27 @@ class _NeedsPageState extends State<NeedsPage> {
     });
   }
 
+  void itemEditedByCode(StorageCard editedItem, int itemIndex){
+
+    _registeredItems.removeAt(itemIndex);
+    setState(() {
+      _registeredItems.insert(itemIndex, editedItem);
+    });
+  }
+
   void _openFindItemWindow() async{
 
     String scannedBarcode = await FlutterBarcodeScanner.scanBarcode(
         '#ff6666', 'Cancel', true, ScanMode.BARCODE);
 
-    final newItem = await Navigator.of(context).push<StorageCard>(
+    await Navigator.of(context).push<StorageCard>(
       MaterialPageRoute(
-        builder: (ctx) =>  FindByCode(listOfItems:_registeredItems, scannedBarcode: int.parse(scannedBarcode),),
+        builder: (ctx) =>  FindByCode(listOfItems:_registeredItems, scannedBarcode: int.parse(scannedBarcode), changeInitialList: itemEditedByCode, addNewItemToList: _addItemToList,),
       ),
     );
-    if (newItem == null) {
-      return;
-    }
+    
+    return;
+    
   }
 
   @override
