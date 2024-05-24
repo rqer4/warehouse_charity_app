@@ -19,6 +19,8 @@ class _ItemsListState extends State<ItemsList> {
   @override
   Widget build(context) {
     return ListView.builder(
+      scrollDirection: Axis.vertical,
+      shrinkWrap: true,
       itemCount: widget.itemsList.length,
       itemBuilder: (ctx, index) => Dismissible(
         key: ValueKey(widget.itemsList[index]),

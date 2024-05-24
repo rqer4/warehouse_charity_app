@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:synny_space/items_list/items_list.dart';
-import 'package:synny_space/screens/find_by_code.dart';
+import 'package:synny_space/pages/needs_page.dart';
+import 'package:synny_space/screens/find_by_code/find_by_code.dart';
 import 'package:synny_space/widgets/item_adding.dart';
 import 'package:synny_space/model/storage_card.dart';
 
@@ -26,7 +28,7 @@ class _ListPageState extends State<ListPage> {
     super.initState();
     _loadItems();
   }
-  
+
   void _loadItems() async {
     final url = Uri.https(
         'sunny-base-default-rtdb.europe-west1.firebasedatabase.app',
@@ -105,7 +107,7 @@ class _ListPageState extends State<ListPage> {
   void _openAddItemWindow() async {
     final newItem = await Navigator.of(context).push<StorageCard>(
       MaterialPageRoute(
-        builder: (ctx) =>  ItemAdding(),
+        builder: (ctx) => ItemAdding(),
       ),
     );
     if (newItem == null) {
@@ -117,39 +119,54 @@ class _ListPageState extends State<ListPage> {
     });
   }
 
-  void itemEditedByCode(StorageCard editedItem, int itemIndex){
-
+  void itemEditedByCode(StorageCard editedItem, int itemIndex) {
     _registeredItems.removeAt(itemIndex);
     setState(() {
       _registeredItems.insert(itemIndex, editedItem);
     });
   }
 
-  void _openFindItemWindow() async{
-
+  void _openFindItemWindow() async {
     String scannedBarcode = await FlutterBarcodeScanner.scanBarcode(
         '#ff6666', 'Cancel', true, ScanMode.BARCODE);
 
     await Navigator.of(context).push<StorageCard>(
       MaterialPageRoute(
-        builder: (ctx) =>  FindByCode(listOfItems:_registeredItems, scannedBarcode: int.parse(scannedBarcode), changeInitialList: itemEditedByCode, addNewItemToList: _addItemToList,),
+        builder: (ctx) => FindByCode(
+          inNeeds: false,
+          listOfItems: _registeredItems,
+          scannedBarcode: int.parse(scannedBarcode),
+          changeInitialList: itemEditedByCode,
+          addNewItemToList: _addItemToList,
+        ),
       ),
     );
-    
+
     return;
-    
   }
 
   @override
   Widget build(BuildContext context) {
-    //Widget mainContent = const Text('No items found. Try to add some!');
-
-    //if (_registeredItems.isNotEmpty) {
-    Widget mainContent = ItemsList(
-      itemsList: _registeredItems,
-      removeItem: _onRemoveItem,
+    Widget mainContent = Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const SizedBox(height: 60, width: 60, child: Icon(Icons.find_in_page_outlined, size: 50,)),
+          Text(
+            'No items found. \nTry to add some!',
+            textAlign: TextAlign.center,
+            style: GoogleFonts.robotoSlab(fontSize: 24, letterSpacing: 3),
+          )
+        ],
+      ),
     );
-    //}
+
+    if (_registeredItems.isNotEmpty) {
+      mainContent = ItemsList(
+        itemsList: _registeredItems,
+        removeItem: _onRemoveItem,
+      );
+    }
 
     return DefaultTabController(
       length: 2,
@@ -201,7 +218,7 @@ class _ListPageState extends State<ListPage> {
                 )
               ],
             ),
-            const Text('Needs')
+            NeedsPage(listOfItems: _registeredItems, addNewItemToList: _addItemToList,)
           ],
         ),
       ),

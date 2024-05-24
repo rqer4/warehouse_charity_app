@@ -49,13 +49,13 @@ class _HomePageState extends State<HomePage> {
       ),
 
       body: _tabs[selectedIndex], //BODY
-
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: const Color.fromARGB(255, 27, 160, 95),
         selectedFontSize: 17,
         selectedIconTheme: const IconThemeData(
             color: Color.fromARGB(255, 27, 160, 95), size: 32),
         selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
+        
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.list_alt_rounded),

@@ -508,7 +508,7 @@ class _CardFormState extends State<CardForm> {
                                   color: Color.fromARGB(255, 14, 150, 19),
                                 ),
                                 Text(
-                                  barcodeChanged
+                                  itemProvided
                                       ? 'Code Changed!\nYou can change it again by pressing button below'
                                       : 'Code Added!\nYou can change it by pressing button below',
                                   textAlign: TextAlign.center,
