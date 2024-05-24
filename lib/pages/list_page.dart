@@ -9,16 +9,16 @@ import 'package:synny_space/screens/find_by_code.dart';
 import 'package:synny_space/widgets/item_adding.dart';
 import 'package:synny_space/model/storage_card.dart';
 
-class NeedsPage extends StatefulWidget {
-  const NeedsPage({super.key});
+class ListPage extends StatefulWidget {
+  const ListPage({super.key});
 
   @override
   State<StatefulWidget> createState() {
-    return _NeedsPageState();
+    return _ListPageState();
   }
 }
 
-class _NeedsPageState extends State<NeedsPage> {
+class _ListPageState extends State<ListPage> {
   List<StorageCard> _registeredItems = [];
 
   @override

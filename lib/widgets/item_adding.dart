@@ -31,8 +31,8 @@ class _ItemAddingState extends State<ItemAdding> {
   var enteredQuantity = 1;
   var enteredMeasureValue = 100.0;
   var enteredTitle = '';
-  Cathegory _pickedCathegory = Cathegory.food;
-  MeasureUnit _pickedMeasureUnit = MeasureUnit.kg;
+  final Cathegory _pickedCathegory = Cathegory.food;
+  final MeasureUnit _pickedMeasureUnit = MeasureUnit.kg;
 
   final _formKey = GlobalKey<FormState>();
 

@@ -1,6 +1,6 @@
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:synny_space/pages/needs_page.dart';
+import 'package:synny_space/pages/list_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -18,7 +18,7 @@ class _HomePageState extends State<HomePage> {
   ];
 
   final List<Widget> _tabs = [
-    const NeedsPage(),
+    const ListPage(),
      ProfileScreen(
       children: [
         const Divider(),
