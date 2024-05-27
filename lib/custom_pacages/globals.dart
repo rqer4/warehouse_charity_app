@@ -1,4 +1,10 @@
-// library my_globals.globals;
+library my_globals.globals;
+
+import 'package:flutter/material.dart';
+
+Color buttonBackColor = Colors.deepPurpleAccent;
+Color buttonForegColor = Colors.white;
+Color submitButtonBackColor = Colors.blueAccent;
 
 // import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 // import 'package:synny_space/model/storage_card.dart';

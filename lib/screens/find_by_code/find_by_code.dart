@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:synny_space/items_list/stored_item.dart';
 import 'package:synny_space/model/storage_card.dart';
@@ -158,8 +157,8 @@ class _FindByCodeState extends State<FindByCode> {
 
   void addCardToNeeds(StorageCard? card) {
     card == null
-        ? widget.sendItemToNeeds!(listItemToEdit)
-        : {widget.sendItemToNeeds!(card), Navigator.pop(context)}; //changed lastly, be aware 
+        ? {widget.sendItemToNeeds!(listItemToEdit), Navigator.pop(context)}
+        : widget.sendItemToNeeds!(card); 
   }
 
   void editCard() {
@@ -176,10 +175,7 @@ class _FindByCodeState extends State<FindByCode> {
         });
   }
 
-  void _succesfullyChanged() {
-    ScaffoldMessenger.of(context).clearSnackBars();
-    // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: const Text('Item succesfully changed'), action: SnackBarAction(label: 'Undo', onPressed: ),));
-  }
+
 
   Widget foundedCard() {
     return Column(children: [

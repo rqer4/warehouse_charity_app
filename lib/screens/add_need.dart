@@ -2,15 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:synny_space/items_list/items_list.dart';
-import 'package:synny_space/items_list/stored_item.dart';
+import 'package:synny_space/custom_pacages/globals.dart' as globals;
 import 'package:synny_space/model/needs_card.dart';
 import 'package:synny_space/model/storage_card.dart';
 import 'package:synny_space/needs_list/needs_item.dart';
 import 'package:synny_space/screens/find_by_code/find_by_code.dart';
 
+// ignore: must_be_immutable
 class AddNeed extends StatefulWidget {
-  AddNeed({super.key, required this.listOfItems, required this.addNewItemToList});
+  AddNeed(
+      {super.key, required this.listOfItems, required this.addNewItemToList});
 
   List<StorageCard> listOfItems;
   void Function(StorageCard item) addNewItemToList;
@@ -32,19 +33,13 @@ class _AddNeedState extends State<AddNeed> {
   DateTime? deadline;
   String? scannedBarcode;
 
-
-
-  _scanBarcode() async {
-    scannedBarcode = await FlutterBarcodeScanner.scanBarcode(
-        '#ff6666', 'Cancel', true, ScanMode.BARCODE);
-    return (int.parse(scannedBarcode!));
-  }
+  bool isButtonExtended = false;
 
   void _openFindItemWindow() async {
     String scannedBarcode = await FlutterBarcodeScanner.scanBarcode(
         '#ff6666', 'Cancel', true, ScanMode.BARCODE);
 
-    final newItem = await Navigator.of(context).push<StorageCard>(
+    await Navigator.of(context).push<StorageCard>(
       MaterialPageRoute(
         builder: (ctx) => FindByCode(
           inNeeds: true,
@@ -56,11 +51,11 @@ class _AddNeedState extends State<AddNeed> {
         ),
       ),
     );
-    
+
     //return;
   }
 
-  void addToListOfNeedsItems(StorageCard card){
+  void addToListOfNeedsItems(StorageCard card) {
     setState(() {
       listOfNeedsItems.add(card);
     });
@@ -90,107 +85,120 @@ class _AddNeedState extends State<AddNeed> {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: Form(
           child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        textCapitalization: TextCapitalization.sentences,
-                        initialValue: needTitle,
-                        decoration:
-                            const InputDecoration(label: Text('Назва*')),
-                        validator: (value) {
-                          if (value == null ||
-                              value.isEmpty ||
-                              value.length > 20) {
-                            return 'Invalid title';
-                          }
-                          return null;
-                        },
-                        onSaved: (value) {
-                          needTitle = value!;
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                        child: TextFormField(
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                          label: Text('Загальна вартість'), prefix: Text('₴ ')),
-                    )),
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            deadline == null
-                                ? 'Deadline date\'s\n   not selected'
-                                : 'Дедлайн:\n${formater.format(deadline!)}',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          IconButton(
-                              onPressed: _showDatePicker,
-                              icon: const Icon(Icons.calendar_month_outlined))
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                listOfNeedsItems.isNotEmpty
-                    ? Padding(
-                      
-                      padding: const EdgeInsets.only(top: 15),
-                      child: NeedsItem(needItem: NeedsCard(parentId: DateTime.now().toString(), title: 'Selected Items', childrens: listOfNeedsItems), onRemoveChild: _onRemoveItem,),
-                    )
-                    : Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Card.outlined(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                         Text('No added items yet. \n', style: GoogleFonts.robotoSlab(fontSize: 22),),
-                                
-                      ],
-                    ),
-                const SizedBox(
-                  height: 25,
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                textCapitalization:
+                                    TextCapitalization.sentences,
+                                initialValue: needTitle,
+                                decoration: const InputDecoration(
+                                    label: Text('Назва*')),
+                                validator: (value) {
+                                  if (value == null ||
+                                      value.isEmpty ||
+                                      value.length > 20) {
+                                    return 'Invalid title';
+                                  }
+                                  return null;
+                                },
+                                onSaved: (value) {
+                                  needTitle = value!;
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                                child: TextFormField(
+                              keyboardType: TextInputType.number,
+                              decoration: const InputDecoration(
+                                  label: Text('Загальна вартість'),
+                                  prefix: Text('₴ ')),
+                            )),
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    deadline == null
+                                        ? 'Deadline date\'s\n   not selected'
+                                        : 'Дедлайн:\n${formater.format(deadline!)}',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  IconButton(
+                                      onPressed: _showDatePicker,
+                                      icon: const Icon(
+                                          Icons.calendar_month_outlined))
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        listOfNeedsItems.isNotEmpty
+                            ? Padding(
+                                padding: const EdgeInsets.only(top: 15),
+                                child: NeedsItem(
+                                  needItem: NeedsCard(
+                                      parentId: DateTime.now().toString(),
+                                      title: 'Selected Items:',
+                                      childrens: listOfNeedsItems),
+                                  onRemoveChild: _onRemoveItem,
+                                ),
+                              )
+                            : Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 15),
+                                        child: Text(
+                                          'No added items yet. \n',
+                                          style: GoogleFonts.robotoSlab(
+                                              fontSize: 20),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const Text(
+                                    'Scan the code and add some by pressing button below',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(fontSize: 16),
+                                  )
+                                ],
+                              ),
+                        const SizedBox(
+                          height: 25,
+                        ),
+                      ]),
                 ),
-
-                ElevatedButton.icon(
-                
-                    onPressed: _openFindItemWindow,
-                    icon: const Icon(CupertinoIcons.barcode_viewfinder),
-                    label: const Text('Find item to add by code!'),
-                    style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(200, 40),
-                        backgroundColor: buttonBackColor,
-                        foregroundColor: buttonForegColor)),
-                ElevatedButton.icon(
-                    onPressed: () {},
-                    icon: const Icon(Icons.create),
-                    label: const Text('Create new item and add.'),
-                    style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(200, 40),
-                        backgroundColor: buttonBackColor,
-                        foregroundColor: buttonForegColor)),
-                TextButton.icon(
-                  onPressed: () {
-
-                    Navigator.pop(context);
-                  },
-                  label: const Text('Back to needs list.'),
-                  icon: const Icon(Icons.keyboard_backspace_rounded),
-                )
-              ]),
+              ),
+              TextButton.icon(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                label: const Text('Back to needs list.'),
+                icon: const Icon(Icons.keyboard_backspace_rounded),
+              )
+            ],
+          ),
         ),
       );
     }
@@ -198,6 +206,24 @@ class _AddNeedState extends State<AddNeed> {
     return Scaffold(
         appBar: AppBar(
           title: const Text('Create need'),
+                 
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+        floatingActionButton: SizedBox(
+          height: 65,
+          width: 65,
+          child: FittedBox(
+            child: FloatingActionButton(
+              backgroundColor: globals.buttonForegColor,
+              foregroundColor: globals.buttonBackColor,
+              onPressed: _openFindItemWindow,
+              shape: const CircleBorder(),
+              child: const Icon(
+                CupertinoIcons.barcode_viewfinder,
+                
+              ),
+            ),
+          ),
         ),
         body: needNotCreated());
   }

@@ -4,11 +4,7 @@ import 'package:synny_space/model/needs_card.dart';
 import 'package:synny_space/model/storage_card.dart';
 
 class NeedsItem extends StatefulWidget {
-  NeedsItem({
-    super.key,
-    required this.needItem,
-    required this.onRemoveChild
-  });
+  NeedsItem({super.key, required this.needItem, required this.onRemoveChild});
 
   NeedsCard needItem;
   Function(StorageCard child) onRemoveChild;
@@ -18,30 +14,32 @@ class NeedsItem extends StatefulWidget {
 }
 
 class _NeedsItemState extends State<NeedsItem> {
-  onRemoveItem(StorageCard card){
+  onRemoveItem(StorageCard card) {
     setState(() {
       widget.onRemoveChild(card);
     });
-    
   }
 
   @override
   Widget build(BuildContext context) {
-    return Card.outlined(
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Text(widget.needItem.title),
-              Text(widget.needItem.deadline != null
-                  ? formater.format(widget.needItem.deadline!)
-                  : ''),
-            ],
-          ),
-          Container(constraints: const BoxConstraints(maxHeight: 355) ,child: ItemsList(itemsList: widget.needItem.childrens, removeItem: onRemoveItem))
-        ],
-        
-      ),
+    return Column(
+      children: [
+        Row(
+          children: [
+            Text(
+              widget.needItem.title,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, decoration: TextDecoration.underline),
+            ),
+            Text(widget.needItem.deadline != null
+                ? formater.format(widget.needItem.deadline!)
+                : ''),
+          ],
+        ),
+        ItemsList(
+            isForNeeds: true,
+            itemsList: widget.needItem.childrens,
+            removeItem: onRemoveItem)
+      ],
     );
   }
 }
