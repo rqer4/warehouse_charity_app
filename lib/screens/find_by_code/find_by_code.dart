@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:synny_space/items_list/stored_item.dart';
+import 'package:synny_space/items_list/items_list.dart';
 import 'package:synny_space/model/storage_card.dart';
-import 'package:synny_space/widgets/card_form.dart';
 import 'package:synny_space/widgets/item_adding.dart';
 
 class FindByCode extends StatefulWidget {
@@ -29,7 +28,9 @@ class FindByCode extends StatefulWidget {
 
 class _FindByCodeState extends State<FindByCode> {
   int? itemIndex;
-  bool cardFounded = false;
+  int? editItemIndex;
+  bool cardsFounded = false;
+  List<StorageCard> listItemsToEdit = [];
   late StorageCard listItemToEdit;
   Color buttonBackColor = Colors.deepPurpleAccent;
   Color buttonForegColor = Colors.white;
@@ -42,19 +43,27 @@ class _FindByCodeState extends State<FindByCode> {
     scannedBarcode = barcode.toString();
     for (StorageCard item in widget.listOfItems) {
       if (item.barcode == barcode) {
-        return setState(() {
-          itemIndex = widget.listOfItems.indexOf(item);
-          listItemToEdit = widget.listOfItems[itemIndex!];
-
-          cardFounded = true;
-        });
+        itemIndex = widget.listOfItems.indexOf(item);
+        listItemsToEdit.add(widget.listOfItems[itemIndex!]);
+        cardsFounded = true;
 
         //print('INDEX^^^:::::::::::::::::::::$itemIndex');
       }
     }
-
+    if (cardsFounded) {
+      return setState(() {
+        cardsFounded = true;
+      });
+    }
     return setState(() {
-      cardFounded = false;
+      cardsFounded = false;
+    });
+  }
+
+  void _onRemoveItem(StorageCard itemCard) async {
+    final itemIndex = listItemsToEdit.indexOf(itemCard);
+    setState(() {
+      listItemsToEdit.removeAt(itemIndex);
     });
   }
 
@@ -140,46 +149,28 @@ class _FindByCodeState extends State<FindByCode> {
         ]);
   }
 
-  editCardData(StorageCard card) {
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text('Item succesfully changed'),
-      duration: Duration(seconds: 5),
-      backgroundColor: Colors.green,
-    ));
-
+  editCardData(StorageCard card, newCard) {
     return setState(() {
       cardEdited = true;
-      listItemToEdit = card;
-      widget.listOfItems[itemIndex!] = listItemToEdit;
+      itemIndex = widget.listOfItems.indexOf(card);  
+      widget.changeInitialList!(newCard, itemIndex!);
     });
   }
 
   void addCardToNeeds(StorageCard? card) {
     card == null
-        ? {widget.sendItemToNeeds!(listItemToEdit), Navigator.pop(context)}
-        : widget.sendItemToNeeds!(card); 
+        ? {widget.sendItemToNeeds!(listItemsToEdit[listItemsToEdit.length-1]), Navigator.pop(context)}
+        : widget.sendItemToNeeds!(card);
   }
-
-  void editCard() {
-    showModalBottomSheet(
-        isScrollControlled: true,
-        context: context,
-        builder: (context) {
-          return Padding(
-              padding: const EdgeInsets.fromLTRB(10, 48, 10, 10),
-              child: CardForm(
-                givenItem: listItemToEdit,
-                editItem: editCardData,
-              ));
-        });
-  }
-
 
 
   Widget foundedCard() {
     return Column(children: [
-      StoredItem(listItemToEdit),
+      ItemsList(
+        itemsList: listItemsToEdit,
+        removeItem: _onRemoveItem,
+        changeItemInItitialList: editCardData,
+      ),
       widget.inNeeds
           ? ElevatedButton.icon(
               onPressed: () {
@@ -192,15 +183,7 @@ class _FindByCodeState extends State<FindByCode> {
                   backgroundColor: buttonBackColor,
                   foregroundColor: buttonForegColor),
             )
-          : ElevatedButton.icon(
-              onPressed: editCard,
-              icon: const Icon(Icons.edit),
-              label: const Text('Edit this item!'),
-              style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(200, 40),
-                  backgroundColor: buttonBackColor,
-                  foregroundColor: buttonForegColor),
-            ),
+          : const Text('Swipe right to edit item'),
       ElevatedButton.icon(
         onPressed: () {
           _findCard(null);
@@ -216,7 +199,7 @@ class _FindByCodeState extends State<FindByCode> {
         onPressed: () {
           cardEdited
               ? {
-                  widget.changeInitialList!(listItemToEdit, itemIndex!),
+                  //widget.changeInitialList!(listItemToEdit, itemIndex!),
                   Navigator.pop(context)
                 }
               : Navigator.pop(context);
@@ -235,7 +218,7 @@ class _FindByCodeState extends State<FindByCode> {
         ),
         body: Padding(
           padding: const EdgeInsets.all(10),
-          child: cardFounded ? foundedCard() : Center(child: cardNotFounded()),
+          child: cardsFounded ? foundedCard() : Center(child: cardNotFounded()),
         ));
   }
 }

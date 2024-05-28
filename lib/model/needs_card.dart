@@ -9,15 +9,23 @@ class NeedsCard{
   NeedsCard({
     required this.parentId,
     required this.title,
-    required this.childrens,
+    this.childrens,
+    this.childIds,
+    this.childGoals,
+    this.childStartPoints,
     this.price,
     this.deadline,
+    this.deadlineInSeconds,
 
   });
   final String parentId;
   final String title;
-  final List<StorageCard> childrens;
+  final List<StorageCard>? childrens;
   final DateTime? deadline;
+  final int? deadlineInSeconds;
+  final List<dynamic>? childIds;
+  final List<dynamic>? childGoals;
+  final List<dynamic>? childStartPoints;
   final int? price;
   String get formatedDate{
     return formater.format(deadline!);

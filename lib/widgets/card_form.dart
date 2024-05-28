@@ -14,7 +14,7 @@ class CardForm extends StatefulWidget {
 
   StorageCard? givenItem;
   //void Function(bool imageFrom) addImage;
-  void Function(StorageCard card)? editItem;
+  void Function(StorageCard card, StorageCard newCard)? editItem;
   String? barcode;
   @override
   State<CardForm> createState() => _CardFormState();
@@ -28,7 +28,7 @@ class _CardFormState extends State<CardForm> {
   String imageUrl = '';
   bool imageChanged = false;
 
-  var newQuantity = 1;
+  int newQuantity = 1;
   var newMeasureValue = 100.0;
   var newTitle = '';
 
@@ -237,16 +237,7 @@ class _CardFormState extends State<CardForm> {
         //!!!!!!!!!!!!!!!!!   CHANGE LATER    !!!!!!!!!!!!!!!!!!!
         //!!!!!!!!!!!!!!!!!   CHANGE LATER    !!!!!!!!!!!!!!!!!!!
         final itemToPass = StorageCard(
-            id: json
-                .decode(response.body)
-                .toString()
-                .replaceRange(
-                  0,
-                  7,
-                  '',
-                )
-                .replaceRange(20, 21,
-                    ''), //!!!!!!!!!!!!!!!!!   CHANGE LATER    !!!!!!!!!!!!!!!!!!!
+            id: widget.givenItem!.id, //!!!!!!!!!!!!!!!!!   CHANGE LATER    !!!!!!!!!!!!!!!!!!!
             barcode: int.parse(newBarcode!),
             image: imgUrl,
             quantity: newQuantity,
@@ -255,7 +246,7 @@ class _CardFormState extends State<CardForm> {
             measureVolume: newMeasureValue,
             measureUnit: _newMeasureUnit);
 
-        widget.editItem!(itemToPass);
+        widget.editItem!(widget.givenItem! ,itemToPass );
 
         Navigator.of(context).pop();
       }

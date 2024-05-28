@@ -4,11 +4,11 @@ import 'package:synny_space/model/needs_card.dart';
 import 'package:synny_space/model/storage_card.dart';
 
 class NeedsItem extends StatefulWidget {
-  NeedsItem({super.key, required this.needItem, required this.onRemoveChild});
+  NeedsItem({super.key, required this.needItem, required this.onRemoveChild, required this.onCreateNeed});
 
   NeedsCard needItem;
   Function(StorageCard child) onRemoveChild;
-
+  Function(List<double> listOfStartPoints, List<double> listOfGoals) onCreateNeed;
   @override
   State<NeedsItem> createState() => _NeedsItemState();
 }
@@ -37,8 +37,9 @@ class _NeedsItemState extends State<NeedsItem> {
         ),
         ItemsList(
             isForNeeds: true,
-            itemsList: widget.needItem.childrens,
-            removeItem: onRemoveItem)
+            itemsList: widget.needItem.childrens!,
+            removeItem: onRemoveItem,
+            onCreateNeed: widget.onCreateNeed,)
       ],
     );
   }

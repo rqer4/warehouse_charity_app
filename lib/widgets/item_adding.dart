@@ -12,6 +12,7 @@ class ItemAdding extends StatefulWidget {
       fontFamily: CupertinoIcons.iconFont,
       fontPackage: CupertinoIcons.iconFontPackage);
 
+  
   String? barcode;
   @override
   State<StatefulWidget> createState() {

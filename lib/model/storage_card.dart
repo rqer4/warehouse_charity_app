@@ -21,7 +21,7 @@ class StorageCard {
   final String id;
   final int barcode;
   String title;
-  int quantity;
+  dynamic quantity;
   String image;
   Cathegory cathegory;
   double measureVolume;

@@ -101,7 +101,7 @@ class StoredItem extends StatelessWidget {
                   //crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     WidgetZoom(
-                      heroAnimationTag: item.id,
+                      heroAnimationTag: '${item.id}${DateTime.now().millisecondsSinceEpoch}',
                       zoomWidget: Image.network(
                         item.image.toString(),
                         width: 80,
