@@ -65,7 +65,7 @@ class _FinalNeedState extends State<FinalNeed> {
             children: [
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.85,
-                height: 6,
+                height: 9,
                 child: LinearProgressIndicator(
                   color: Color.fromARGB(255, 51, 144, 23),
                   borderRadius: BorderRadius.circular(8),
@@ -156,25 +156,32 @@ class _FinalNeedState extends State<FinalNeed> {
         shrinkWrap: true,
         //physics: const PageScrollPhysics(),
         itemBuilder: (context, index) {
-          return Card(
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(widget.isFromAddingNeed == null
-                        ? widget.loadedNeeds[index].title
-                        : widget.createdNeedCard!.title),
-                    Text(widget.isFromAddingNeed == null
-                        ? '${widget.loadedNeeds[index].deadlineInSeconds == null ? '' : DateTime.fromMillisecondsSinceEpoch(widget.loadedNeeds[index].deadlineInSeconds! - DateTime.now().millisecondsSinceEpoch)}'
-                        : '${widget.createdNeedCard!.deadlineInSeconds == null ? '' : DateTime.fromMillisecondsSinceEpoch(widget.createdNeedCard!.deadlineInSeconds!)}')
-                  ],
-                ),
-                widget.isFromAddingNeed == null
-                    ? ListsOfItems(index)
-                    : ListFromCreatedItem(),
-                totalProgressBar(context, index)
-              ],
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 30),
+            child: Card.filled(
+              color:  Colors.white,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(widget.isFromAddingNeed == null
+                            ? widget.loadedNeeds[index].title
+                            : widget.createdNeedCard!.title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),),
+                        Text(widget.isFromAddingNeed == null
+                            ? '${widget.loadedNeeds[index].deadlineInSeconds == null ? '' : DateTime.fromMillisecondsSinceEpoch(widget.loadedNeeds[index].deadlineInSeconds! - DateTime.now().millisecondsSinceEpoch)}'
+                            : '${widget.createdNeedCard!.deadlineInSeconds == null ? '' : DateTime.fromMillisecondsSinceEpoch(widget.createdNeedCard!.deadlineInSeconds!)}')
+                      ],
+                    ),
+                  ),
+                  widget.isFromAddingNeed == null
+                      ? ListsOfItems(index)
+                      : ListFromCreatedItem(),
+                  totalProgressBar(context, index)
+                ],
+              ),
             ),
           );
         },

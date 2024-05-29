@@ -154,6 +154,7 @@ class _NeedsPageState extends State<NeedsPage> {
           ),
         ),
       ),
+      backgroundColor: const Color.fromARGB(64, 255, 214, 64),
       body: Column(
         children: [
           Expanded(child: mainContent),

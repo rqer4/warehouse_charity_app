@@ -11,7 +11,10 @@ import 'package:synny_space/widgets/item_adding.dart';
 import 'package:synny_space/model/storage_card.dart';
 
 class ListPage extends StatefulWidget {
-  ListPage({super.key, required this.registeredItems, });
+  ListPage({
+    super.key,
+    required this.registeredItems,
+  });
 
   List<StorageCard> registeredItems;
 
@@ -22,8 +25,6 @@ class ListPage extends StatefulWidget {
 }
 
 class _ListPageState extends State<ListPage> {
-  
-
   void _onRemoveItem(StorageCard itemCard) async {
     final itemIndex = widget.registeredItems.indexOf(itemCard);
     setState(() {
@@ -92,38 +93,43 @@ class _ListPageState extends State<ListPage> {
 
   @override
   Widget build(BuildContext context) {
-    Widget mainContent = Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const SizedBox(
-              height: 60,
-              width: 60,
-              child: Icon(
-                Icons.find_in_page_outlined,
-                size: 50,
-              )),
-          Text(
-            'No items found. \nTry to add some!',
-            textAlign: TextAlign.center,
-            style: GoogleFonts.robotoSlab(fontSize: 24, letterSpacing: 3),
+    
+    Widget mainContent = widget.registeredItems.isNotEmpty
+        ? ItemsList(
+            itemsList: widget.registeredItems,
+            removeItem: _onRemoveItem,
           )
-        ],
-      ),
-    );
+        : Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(
+                    height: 60,
+                    width: 60,
+                    child: Icon(
+                      Icons.find_in_page_outlined,
+                      size: 50,
+                    )),
+                Text(
+                  'No items found. \nTry to add some!',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.robotoSlab(fontSize: 24, letterSpacing: 3),
+                )
+              ],
+            ),
+          );
 
-    if (widget.registeredItems.isNotEmpty) {
-      mainContent = ItemsList(
-        itemsList: widget.registeredItems,
-        removeItem: _onRemoveItem,
-      );
-    }
+    // if (widget.registeredItems.isNotEmpty) {
+    //   mainContent = ItemsList(
+    //     itemsList: widget.registeredItems,
+    //     removeItem: _onRemoveItem,
+    //   );
+    // }
 
     return Scaffold(
       floatingActionButton: SpeedDial(
         backgroundColor: Colors.white,
         foregroundColor: Colors.deepPurple,
-        
         children: [
           SpeedDialChild(
             child: const Icon(CupertinoIcons.barcode_viewfinder),
