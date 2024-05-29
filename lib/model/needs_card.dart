@@ -13,7 +13,6 @@ class NeedsCard{
     this.childIds,
     this.childGoals,
     this.childStartPoints,
-    this.price,
     this.deadline,
     this.deadlineInSeconds,
 
@@ -26,7 +25,6 @@ class NeedsCard{
   final List<dynamic>? childIds;
   final List<dynamic>? childGoals;
   final List<dynamic>? childStartPoints;
-  final int? price;
   String get formatedDate{
     return formater.format(deadline!);
   }

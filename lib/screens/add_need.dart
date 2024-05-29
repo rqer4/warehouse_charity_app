@@ -44,32 +44,38 @@ class _AddNeedState extends State<AddNeed> {
 
   void onCreateNeed(
       List<double>? listOfStartPoints, List<double>? listOfGoals) async {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-      print('HEREWEAREEEEEEEEEEEEEEE');
-      for (final item in listOfNeedsItems) {
-        listOfSelectedItemIds.add(item.id);
-      }
-      final url = Uri.https(
-          'sunny-base-default-rtdb.europe-west1.firebasedatabase.app',
-          'needs-list.json');
-      final response = await http.post(
-        url,
-        headers: {'Content-type': 'application/json'},
-        body: json.encode(
-          {
-            'title': needTitle,
-            'childrens': {
-              'id': listOfSelectedItemIds,
-              'start': listOfStartPoints,
-              'goals': listOfGoals
+    if (listOfNeedsItems.isNotEmpty) {
+      if (_formKey.currentState!.validate()) {
+        _formKey.currentState!.save();
+        for (final item in listOfNeedsItems) {
+          listOfSelectedItemIds.add(item.id);
+        }
+        final url = Uri.https(
+            'sunny-base-default-rtdb.europe-west1.firebasedatabase.app',
+            'needs-list.json');
+        final response = await http.post(
+          url,
+          headers: {'Content-type': 'application/json'},
+          body: json.encode(
+            {
+              'title': needTitle,
+              'childrens': {
+                'id': listOfSelectedItemIds,
+                'start': listOfStartPoints,
+                'goals': listOfGoals
+              },
+              'deadline':
+                  deadline != null ? deadline!.millisecondsSinceEpoch : 0,
             },
-            'price': int.parse(enteredPrice!),
-            'deadline': deadline != null ? deadline!.millisecondsSinceEpoch : 0,
-          },
-        ),
-      );
-      Navigator.of(context).pop(NeedsCard(
+          ),
+        );
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Потребу успішно створено.'),
+          duration: Duration(seconds: 5),
+          backgroundColor: Colors.green,
+        ));
+        Navigator.of(context).pop(NeedsCard(
           parentId: json
               .decode(response.body)
               .toString()
@@ -83,8 +89,17 @@ class _AddNeedState extends State<AddNeed> {
           childIds: listOfSelectedItemIds,
           childStartPoints: listOfStartPoints,
           childGoals: listOfGoals,
-          deadlineInSeconds: deadline != null ? deadline!.millisecondsSinceEpoch : 0,
-          price: int.parse(enteredPrice!)));
+          deadlineInSeconds:
+              deadline != null ? deadline!.millisecondsSinceEpoch : 0,
+        ));
+      }
+    } else {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Додайте предмети збору, відсканувавши код.'),
+        duration: Duration(seconds: 5),
+        backgroundColor: Colors.red,
+      ));
     }
   }
 
@@ -176,25 +191,6 @@ class _AddNeedState extends State<AddNeed> {
                         ),
                         Row(
                           children: [
-                            Expanded(
-                                child: TextFormField(
-                              keyboardType: TextInputType.number,
-                              
-                              initialValue: '0',
-                              decoration: const InputDecoration(
-                                label: Text('Загальна вартість'),
-                                prefix: Text('₴ '),
-                              ),
-                              validator: (value) {
-                                if (double.parse(value!) < 0) {
-                                  return 'Can\'t be < 0';
-                                }
-                                return null;
-                              },
-                              onSaved: (value) {
-                                enteredPrice = (value!);
-                              },
-                            )),
                             Expanded(
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.end,

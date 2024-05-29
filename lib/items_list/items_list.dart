@@ -150,9 +150,6 @@ class _ItemsListState extends State<ItemsList> {
       }
       if (validCounter == formKeyList.length) {
         widget.onCreateNeed!(startPoint, endPoint);
-        print(
-          'start point $startPoint    $enteredStart|||||| GOAL $endPoint   $enteredGoal');
-
       }
       
       //for(item in )

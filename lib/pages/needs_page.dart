@@ -62,6 +62,26 @@ class _NeedsPageState extends State<NeedsPage> {
     _loadItems();
   }
 
+  void removeNeed(NeedsCard cardToRemove) async {
+    final itemIndex = registeredNeeds.indexOf(cardToRemove);
+    setState(() {
+      registeredNeeds.removeAt(itemIndex);
+    });
+
+    final url = Uri.https(
+      'sunny-base-default-rtdb.europe-west1.firebasedatabase.app',
+      'needs-list/${cardToRemove.parentId}.json',
+    );
+    //FirebaseStorage.instance.ref('Item-images').child(itemCard.image).delete();
+    final response = await http.delete(url);
+
+    if (response.statusCode >= 400) {
+      setState(() {
+        registeredNeeds.insert(itemIndex, cardToRemove);
+      });
+    }
+  }
+
   void _loadItems() async {
     final url = Uri.https(
         'sunny-base-default-rtdb.europe-west1.firebasedatabase.app',
@@ -74,14 +94,23 @@ class _NeedsPageState extends State<NeedsPage> {
     final List<NeedsCard> loadedItems = [];
 
     for (final item in listData.entries) {
-      loadedItems.add(NeedsCard(
+      if (item.value['childrens'] != null) {
+        loadedItems.add(NeedsCard(
           parentId: item.key,
           title: item.value['title'],
+          deadlineInSeconds: item.value['deadline'],
+          
           childIds: item.value['childrens']['id'],
           childGoals: item.value['childrens']['goals'],
           childStartPoints: item.value['childrens']['start'],
-          deadlineInSeconds: item.value['deadline'],
-          price: item.value['price']));
+        ));
+      } else {
+        loadedItems.add(NeedsCard(
+            parentId: item.key,
+            title: item.value['title'],
+            deadlineInSeconds: item.value['deadline'],
+        ));
+      }
     }
 
     setState(() {
@@ -98,6 +127,7 @@ class _NeedsPageState extends State<NeedsPage> {
         onAddQuantity: onChangeNeed,
         createdNeedCard: newCard,
         registeredItems: widget.listOfItems,
+        onRemoveNeed: removeNeed,
         loadedNeeds: [],
       );
     });
@@ -124,6 +154,7 @@ class _NeedsPageState extends State<NeedsPage> {
       loadedNeeds: registeredNeeds,
       registeredItems: widget.listOfItems,
       onAddQuantity: onChangeNeed,
+      onRemoveNeed: removeNeed,
     );
     // Padding(
     //   padding: const EdgeInsets.fromLTRB(10, 20, 10, 50),

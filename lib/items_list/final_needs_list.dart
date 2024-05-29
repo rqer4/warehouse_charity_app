@@ -56,8 +56,6 @@ class _FinalNeedsListState extends State<FinalNeedsList> {
       widget.updateTotalProgres(widget.needsCardLocal);
       widget.onAddQuantity(widget.needsCardLocal, index);
     });
-    
-      
   }
 
   Widget finalList(int index) {
@@ -142,17 +140,6 @@ class _FinalNeedsListState extends State<FinalNeedsList> {
                         return null;
                       },
                     ),
-                    //     TextField(
-
-                    //       decoration: InputDecoration(
-                    //           border: OutlineInputBorder(
-                    //               borderRadius: BorderRadius.circular(5))),
-                    //       enabled: widget.chosenItemStarts[index] <
-                    //           widget.chosenItemGoals[index],
-                    //       keyboardType: TextInputType.number,
-                    //       controller: addController,
-                    //     ),
-                    //   ),
                   ),
                   IconButton.filled(
                     onPressed: progres < 1
