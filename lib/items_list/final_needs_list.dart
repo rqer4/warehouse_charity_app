@@ -11,13 +11,15 @@ class FinalNeedsList extends StatefulWidget {
       required this.chosenItemStarts,
       required this.chosenItemGoals,
       required this.onAddQuantity,
-      required this.needsCardLocal});
+      required this.needsCardLocal,
+      required this.updateTotalProgres});
 
   final NeedsCard needsCardLocal;
   final List<StorageCard> chosenNeedItems;
   final List<double> chosenItemStarts;
   final List<double> chosenItemGoals;
   final void Function(NeedsCard, int) onAddQuantity;
+  final void Function(NeedsCard) updateTotalProgres;
 
   @override
   State<FinalNeedsList> createState() => _FinalNeedsListState();
@@ -25,9 +27,32 @@ class FinalNeedsList extends StatefulWidget {
 
 class _FinalNeedsListState extends State<FinalNeedsList> {
   onAddQuantity(int index, TextEditingController addController) {
+    if (addController.text.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Enter number'),
+            content: const Text(
+                'Looks like you did\'n entered value, plese, enter number you want to add.'),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Okay'))
+            ],
+          );
+        },
+      );
+      return;
+    }
+    
     setState(() {
       widget.chosenItemStarts[index] += int.parse(addController.text);
-      widget.needsCardLocal.childStartPoints![index] = widget.chosenItemStarts[index];
+      widget.needsCardLocal.childStartPoints![index] =
+          widget.chosenItemStarts[index];
+      widget.updateTotalProgres(widget.needsCardLocal);
     });
   }
 
@@ -44,14 +69,13 @@ class _FinalNeedsListState extends State<FinalNeedsList> {
     return Column(
       children: [
         StoredItem(
-                   
           widget.chosenNeedItems[index],
           isShrinked: true,
         ),
         Padding(
           padding: const EdgeInsets.only(left: 15, top: 10, bottom: 10),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Padding(
@@ -89,32 +113,46 @@ class _FinalNeedsListState extends State<FinalNeedsList> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 15),
-                child: SizedBox(
-                  height: 50,
-                  width: 50,
-                  child: TextField(
-                    enabled: widget.chosenItemStarts[index] <
-                        widget.chosenItemGoals[index],
-                    keyboardType: TextInputType.number,
-                    controller: addController,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 15),
+                    child: SizedBox(
+                      height: 40,
+                      width: 40,
+                      child: TextField(
+                        // buildCounter: (context, {required currentLength, required isFocused, required maxLength}) {
+                        //   currentLength = int.parse(widget.chosenItemStarts[index].toString());
+                        //   maxLength = int.parse(widget.chosenItemGoals[index].toString());
+                        // },
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(5))),
+                        enabled: widget.chosenItemStarts[index] <
+                            widget.chosenItemGoals[index],
+                        keyboardType: TextInputType.number,
+                        controller: addController,
+                      ),
+                    ),
                   ),
-                ),
+                  IconButton.outlined(
+                    onPressed: () {
+                      onAddQuantity(index, addController);
+                    },
+                    icon: const Icon(Icons.add),
+                    iconSize: 20,
+                  ),
+                  IconButton.filled(
+                    onPressed: () {
+                      widget.onAddQuantity(widget.needsCardLocal, index);
+                    },
+                    icon: const Icon(Icons.save),
+                    color: Colors.white,
+                    style: IconButton.styleFrom(backgroundColor: Colors.blue),
+                  )
+                ],
               ),
-              IconButton.outlined(
-                onPressed: () {
-                  onAddQuantity(index, addController);
-                },
-                icon: const Icon(Icons.add),
-                iconSize: 20,
-              ),
-              IconButton.filled(
-                onPressed: () {widget.onAddQuantity(widget.needsCardLocal, index);},
-                icon: const Icon(Icons.save),
-                color: Colors.white,
-                style: IconButton.styleFrom(backgroundColor: Colors.blue),
-              )
             ],
           ),
         ),
@@ -125,8 +163,7 @@ class _FinalNeedsListState extends State<FinalNeedsList> {
   @override
   Widget build(BuildContext context) {
     return Wrap(
-      children: List.generate( widget.chosenNeedItems.length, (index) {
-        
+      children: List.generate(widget.chosenNeedItems.length, (index) {
         return finalList(index);
       }),
     );

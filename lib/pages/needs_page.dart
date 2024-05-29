@@ -83,9 +83,17 @@ class _NeedsPageState extends State<NeedsPage> {
     });
   }
 
-  void _addNewNeedToInitialList(NeedsCard newCard){
+  void _addNewNeedToInitialList(NeedsCard newCard) {
+    registeredNeeds.add(newCard);
+
     setState(() {
-      registeredNeeds.add(newCard);
+      FinalNeed(
+        isFromAddingNeed: true,
+        onAddQuantity: onChangeNeed,
+        createdNeedCard: newCard,
+        registeredItems: widget.listOfItems,
+        loadedNeeds: [],
+      );
     });
   }
 
@@ -102,7 +110,6 @@ class _NeedsPageState extends State<NeedsPage> {
       return;
     }
     _addNewNeedToInitialList(newItem);
-    
   }
 
   @override
