@@ -10,16 +10,21 @@ import 'package:synny_space/widgets/final_need.dart';
 
 class NeedsPage extends StatefulWidget {
   NeedsPage(
-      {super.key, required this.listOfItems, required this.addNewItemToList});
+      {super.key,
+      required this.listOfItems,
+      required this.addNewItemToList,
+      required this.changeQuantityInList});
 
   List<StorageCard> listOfItems;
   void Function(StorageCard item) addNewItemToList;
+  void Function(NeedsCard, int) changeQuantityInList;
   @override
   State<NeedsPage> createState() => _NeedsPageState();
 }
 
 class _NeedsPageState extends State<NeedsPage> {
   List<NeedsCard> registeredNeeds = [];
+
   void onChangeNeed(NeedsCard need, int index) async {
     final url = Uri.https(
         'sunny-base-default-rtdb.europe-west1.firebasedatabase.app',
@@ -47,6 +52,7 @@ class _NeedsPageState extends State<NeedsPage> {
         },
       ),
     );
+    widget.changeQuantityInList(need, index);
   }
 
   @override

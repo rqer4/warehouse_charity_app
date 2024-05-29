@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:synny_space/model/needs_card.dart';
 import 'package:synny_space/pages/list_page.dart';
 import 'package:synny_space/pages/needs_page.dart';
 import 'package:synny_space/model/storage_card.dart';
@@ -21,6 +22,19 @@ class _TabBarHolderState extends State<TabBarHolder> {
   initState() {
     super.initState();
     _loadItems();
+  }
+
+  void changeInitialListAfterNeedEdit(NeedsCard card, int index) {
+    int counter = 0;
+    for (var item in _registeredItems) {
+      if (item.id == card.childIds![index]) {
+        item.quantity = card.childStartPoints![index];
+        setState(() {
+          _registeredItems[counter].quantity = item.quantity;
+        });
+      }
+      counter++;
+    }
   }
 
   void _loadItems() async {
@@ -81,7 +95,6 @@ class _TabBarHolderState extends State<TabBarHolder> {
 
   @override
   Widget build(BuildContext context) {
-    
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -106,6 +119,7 @@ class _TabBarHolderState extends State<TabBarHolder> {
               registeredItems: _registeredItems,
             ),
             NeedsPage(
+              changeQuantityInList: changeInitialListAfterNeedEdit,
               listOfItems: _registeredItems,
               addNewItemToList: _addItemToList,
             )

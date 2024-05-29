@@ -179,6 +179,7 @@ class _AddNeedState extends State<AddNeed> {
                             Expanded(
                                 child: TextFormField(
                               keyboardType: TextInputType.number,
+                              
                               initialValue: '0',
                               decoration: const InputDecoration(
                                 label: Text('Загальна вартість'),

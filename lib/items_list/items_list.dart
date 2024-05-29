@@ -287,6 +287,8 @@ class _ItemsListState extends State<ItemsList> {
                                   Expanded(
                                     flex: 1,
                                     child: SpinBox(
+                                      
+                                      spacing: 0,
                                       decoration: const InputDecoration(
                                           label: Text(
                                         'Start point:',

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinbox/material.dart';
 //import 'package:gradient_widgets/gradient_widgets.dart';
 import 'package:synny_space/items_list/stored_item.dart';
 import 'package:synny_space/model/needs_card.dart';
@@ -26,8 +27,8 @@ class FinalNeedsList extends StatefulWidget {
 }
 
 class _FinalNeedsListState extends State<FinalNeedsList> {
-  onAddQuantity(int index, TextEditingController addController) {
-    if (addController.text.isEmpty) {
+  onAddQuantity(int index, double value) {
+    if (value <= 0) {
       showDialog(
         context: context,
         builder: (context) {
@@ -47,25 +48,23 @@ class _FinalNeedsListState extends State<FinalNeedsList> {
       );
       return;
     }
-    
+
     setState(() {
-      widget.chosenItemStarts[index] += int.parse(addController.text);
+      widget.chosenItemStarts[index] += value;
       widget.needsCardLocal.childStartPoints![index] =
           widget.chosenItemStarts[index];
       widget.updateTotalProgres(widget.needsCardLocal);
+      widget.onAddQuantity(widget.needsCardLocal, index);
     });
+    
+      
   }
 
   Widget finalList(int index) {
     double progres =
         widget.chosenItemStarts[index] / widget.chosenItemGoals[index];
-    final addController = TextEditingController();
-    @override
-    void dispose() {
-      addController.dispose();
-      super.dispose();
-    }
 
+    double addedValue = 1;
     return Column(
       children: [
         StoredItem(
@@ -73,7 +72,8 @@ class _FinalNeedsListState extends State<FinalNeedsList> {
           isShrinked: true,
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 15, top: 10, bottom: 10),
+          padding:
+              const EdgeInsets.only(left: 15, right: 5, top: 10, bottom: 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -114,39 +114,52 @@ class _FinalNeedsListState extends State<FinalNeedsList> {
                 ),
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 15),
-                    child: SizedBox(
-                      height: 40,
-                      width: 40,
-                      child: TextField(
-                        // buildCounter: (context, {required currentLength, required isFocused, required maxLength}) {
-                        //   currentLength = int.parse(widget.chosenItemStarts[index].toString());
-                        //   maxLength = int.parse(widget.chosenItemGoals[index].toString());
-                        // },
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5))),
-                        enabled: widget.chosenItemStarts[index] <
-                            widget.chosenItemGoals[index],
-                        keyboardType: TextInputType.number,
-                        controller: addController,
-                      ),
+                  SizedBox(
+                    //height: 45,
+
+                    width: 100,
+                    child: SpinBox(
+                      spacing: 0,
+                      textAlign: TextAlign.center,
+                      max: 1000000,
+                      iconSize: 15,
+                      decoration: const InputDecoration(
+                          label: Text(
+                        'Add:',
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      )),
+                      min: 1,
+                      value: 1,
+                      enabled: progres < 1,
+                      validator: (value) {
+                        if (value!.isNotEmpty && double.parse(value) <= 0) {
+                          return 'Invalid value';
+                        }
+                        addedValue = double.parse(value);
+                        return null;
+                      },
                     ),
-                  ),
-                  IconButton.outlined(
-                    onPressed: () {
-                      onAddQuantity(index, addController);
-                    },
-                    icon: const Icon(Icons.add),
-                    iconSize: 20,
+                    //     TextField(
+
+                    //       decoration: InputDecoration(
+                    //           border: OutlineInputBorder(
+                    //               borderRadius: BorderRadius.circular(5))),
+                    //       enabled: widget.chosenItemStarts[index] <
+                    //           widget.chosenItemGoals[index],
+                    //       keyboardType: TextInputType.number,
+                    //       controller: addController,
+                    //     ),
+                    //   ),
                   ),
                   IconButton.filled(
-                    onPressed: () {
-                      widget.onAddQuantity(widget.needsCardLocal, index);
-                    },
+                    onPressed: progres < 1
+                        ? () {
+                            onAddQuantity(index, addedValue);
+                          }
+                        : () {},
                     icon: const Icon(Icons.save),
                     color: Colors.white,
                     style: IconButton.styleFrom(backgroundColor: Colors.blue),

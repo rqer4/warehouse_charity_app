@@ -76,7 +76,7 @@ class _FinalNeedState extends State<FinalNeed> {
           ),
           Text(
             'Загальний прогрес: ${(progres * 100).toStringAsFixed(2)}%',
-            style: const TextStyle(fontWeight: FontWeight.bold),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, ),
           ),
         ],
       ),
@@ -158,8 +158,8 @@ class _FinalNeedState extends State<FinalNeed> {
         itemBuilder: (context, index) {
           return Padding(
             padding: const EdgeInsets.only(bottom: 30),
-            child: Card.filled(
-              color:  Colors.white,
+            child: Card.outlined(
+              //color:  Color.fromARGB(61, 166, 95, 2),
               child: Column(
                 children: [
                   Padding(
@@ -169,7 +169,7 @@ class _FinalNeedState extends State<FinalNeed> {
                       children: [
                         Text(widget.isFromAddingNeed == null
                             ? widget.loadedNeeds[index].title
-                            : widget.createdNeedCard!.title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),),
+                            : widget.createdNeedCard!.title, style:const  TextStyle(fontSize: 18, fontWeight: FontWeight.w600),),
                         Text(widget.isFromAddingNeed == null
                             ? '${widget.loadedNeeds[index].deadlineInSeconds == null ? '' : DateTime.fromMillisecondsSinceEpoch(widget.loadedNeeds[index].deadlineInSeconds! - DateTime.now().millisecondsSinceEpoch)}'
                             : '${widget.createdNeedCard!.deadlineInSeconds == null ? '' : DateTime.fromMillisecondsSinceEpoch(widget.createdNeedCard!.deadlineInSeconds!)}')
