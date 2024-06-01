@@ -97,7 +97,7 @@ class _FinalNeedState extends State<FinalNeed> {
                 width: MediaQuery.of(context).size.width * 0.85,
                 height: 9,
                 child: LinearProgressIndicator(
-                  color: Color.fromARGB(255, 51, 144, 23),
+                  color: const Color.fromARGB(255, 51, 144, 23),
                   borderRadius: BorderRadius.circular(8),
                   value: progres,
                 ),

@@ -104,10 +104,10 @@ class _TabBarHolderState extends State<TabBarHolder> {
             children: [
               TabBar(tabs: [
                 Tab(
-                  text: 'Storage',
+                  text: 'Склад',
                 ),
                 Tab(
-                  text: 'Needs',
+                  text: 'Потреби',
                 )
               ])
             ],

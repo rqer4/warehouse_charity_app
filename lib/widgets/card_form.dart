@@ -56,7 +56,7 @@ class _CardFormState extends State<CardForm> {
 
   Future<void> _scanBarcode() async {
     String scannedBarcode = await FlutterBarcodeScanner.scanBarcode(
-        '#ff6666', 'Cancel', true, ScanMode.BARCODE);
+        '#ff6666', 'Скасувати', true, ScanMode.BARCODE);
     setState(() {
       newBarcode = scannedBarcode;
       barcodeChanged = true;
@@ -68,18 +68,18 @@ class _CardFormState extends State<CardForm> {
     return AlertDialog(
       actions: [
         ElevatedButton(
-            onPressed: Navigator.of(context).pop, child: const Text('Okay'))
+            onPressed: Navigator.of(context).pop, child: const Text('Добре'))
       ],
       content: (selectedImageName.isEmpty && isBarcode)
-          ? const Text('Please, add image and barcode')
+          ? const Text('Будь ласка, додайте зображення та штрих-код')
           : (isBarcode)
-              ? const Text('Please, add barcode')
-              : const Text('Please, add image'),
+              ? const Text('Будь ласка, додайте штрих-код')
+              : const Text('Будь ласка, додайте зображення'),
       title: (selectedImageName.isEmpty && isBarcode)
-          ? const Text('No image and barcode')
+          ? const Text('Відсутнє зображення та код')
           : (isBarcode)
-              ? const Text('No barcode')
-              : const Text('No image'),
+              ? const Text('Відсутній код')
+              : const Text('Відсутнє зображення'),
     );
   }
 
@@ -93,14 +93,14 @@ class _CardFormState extends State<CardForm> {
           child: Wrap(
             children: [
               ListTile(
-                title: const Text('Camera'),
+                title: const Text('Камера'),
                 onTap: () {
                   addImage(true);
                   Navigator.pop(context);
                 },
               ),
               ListTile(
-                  title: const Text('Gallery'),
+                  title: const Text('Галерея'),
                   onTap: () {
                     addImage(false);
                     Navigator.pop(context);
@@ -124,8 +124,8 @@ class _CardFormState extends State<CardForm> {
       return imageUrl;
       //return true;
     } catch (e) {
-      print(e);
-      return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAeFBMVEX///8AAADk5OTo6OhgYGDy8vJOTk6NjY2YmJg0NDS2trbb29v4+PhcXFyjo6Orq6vMzMzt7e2CgoIhISELCwtlZWV1dXVCQkKenp4mJibAwMDX19c8PDwwMDCEhIRJSUlra2t5eXmysrIcHBxVVVUVFRWRkZG8vLzKqIDWAAAExElEQVR4nO2a63KyOhRARbxVsYrXatV6ae37v+En2SBJSAB7nOMws9aPjk1okoVk7yS01QIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABoGpNjx8Uh1K4JpWymFUWqZDyzm0tr35eDbnXf8bC/uncYaxXdsXNQneV79Lhg4GGtXdROy4Z50UxKvtytftyqjpV9nxdGh9rgu75RBYOHDZfetrQvMTNctLOSbVrSczba3SR1bWddzszqcFTH0N1hGUdvW9pTkxkG47Qgnpd2KP4f5T337Q61O+I3HPsb9LD1NbXULrobBu9ScP/m3YYnVfdd2vG5rEO/4eRhw9bnta+4ficNXPopQ31K54byKOWT12kY7aUydlVm3colm1PW4VmvFcN7Xc70ccGcJDoEb84qzTAJLWFQbjhKK7clvclj/uW5CWIYuiv/zKDKUIWPoN9qfakPe6/he2roSSUJ6oEJfnzBSAyrQtWjVBpOZdxTEeidvYa91HBR3tetKV/9iwxjUdtIFhv9+gzzMDFy1Cak4c2f215k2G6N8wnYbw19hr/3izz5IpR71PGP5WWGecS5LUC8hqv7Ve58Eck83pUswF5mmKeJ2/PnNVQRSb4m59r0IJP0s2QsrzPMntNkBvkMJdNd1U9XvkgD1tBRdeeFhpIK1XrbZyhxMvpJfrryRS+dx2W80FAy9TX55DPsSRQ5eeaaLAc25WN5paFakarVqcdQrp2kEbU42WQqV6y+Xml4TuOM13CYRiJ5nt8L9WozM6/YyIrhKBIeVvFQz7A12K1lkewxXGVPp1qYLQv1naT4WDEWMdzvdm8Ju8e3vU5qGrayW+o2jFSuONw+qWj6U8gXKhqfKsZi757+05biTl3DDLfh531E8qmQL8a+GKtjG5ZH3ro8x1Dt3OfJNye7xIKLMrxWjMU2/MO+18FzDNdJqaw41Yzc2xeMjQA0muRoe0XL8KvGuV0NnmIYB7nA2fVXpqFxhlI4iRpOU54UTZ9iONTGmmVGE8NwWWr4v+/x6xge9UbUHsLeXxiG41LD12T8HJdhpC6cxWFCLOeF1hwyDD8aZyj7hkWG+s3KF4ZhNOiMb3w3x/AQFLHyhRlLhW5zDNcOw515SbMN2w5B+zyq2YbuF1mmTrMNVXrbjXK0FU6GMjyYTTXGML4kRfoqWbV5MY7uleHK1X4DDGUNpu90JHsY+UKtVudmkpS0qC1hnrqmicK2lp/38kvYNoZQ01C18KYvIqM3+1tNV6vrbdrRratPObvSY64YTkOTdjv8wwq1nb1ksPjR33bVNNwlJWb6m9lj98TbwDzj974/XPteFPhx5WhBu131DNP3N8ZF0+Jf2i+3M/Rr/G9Ijw8bdrxtFd7jVxmq2WTNsEidPprJ4dvZnXFnnvkev/A2/Y7+rxFqhWktoaf2LVXK9nmDav/XLDsVO9ubX/0zv8Nw7G5pY5y6nzfB3N7oRadFsDbOQ6+XYGWHgmgVXApHZduVsbzbdybW3fMa9h6fh7csFrqwRhqFjoOE2A7nXddL69h1BBGV9JXgHNONmk4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADQIP4BoMgxw01zYggAAAAASUVORK5CYII=';
+      return null;
+      //return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAeFBMVEX///8AAADk5OTo6OhgYGDy8vJOTk6NjY2YmJg0NDS2trbb29v4+PhcXFyjo6Orq6vMzMzt7e2CgoIhISELCwtlZWV1dXVCQkKenp4mJibAwMDX19c8PDwwMDCEhIRJSUlra2t5eXmysrIcHBxVVVUVFRWRkZG8vLzKqIDWAAAExElEQVR4nO2a63KyOhRARbxVsYrXatV6ae37v+En2SBJSAB7nOMws9aPjk1okoVk7yS01QIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABoGpNjx8Uh1K4JpWymFUWqZDyzm0tr35eDbnXf8bC/uncYaxXdsXNQneV79Lhg4GGtXdROy4Z50UxKvtytftyqjpV9nxdGh9rgu75RBYOHDZfetrQvMTNctLOSbVrSczba3SR1bWddzszqcFTH0N1hGUdvW9pTkxkG47Qgnpd2KP4f5T337Q61O+I3HPsb9LD1NbXULrobBu9ScP/m3YYnVfdd2vG5rEO/4eRhw9bnta+4ficNXPopQ31K54byKOWT12kY7aUydlVm3colm1PW4VmvFcN7Xc70ccGcJDoEb84qzTAJLWFQbjhKK7clvclj/uW5CWIYuiv/zKDKUIWPoN9qfakPe6/he2roSSUJ6oEJfnzBSAyrQtWjVBpOZdxTEeidvYa91HBR3tetKV/9iwxjUdtIFhv9+gzzMDFy1Cak4c2f215k2G6N8wnYbw19hr/3izz5IpR71PGP5WWGecS5LUC8hqv7Ve58Eck83pUswF5mmKeJ2/PnNVQRSb4m59r0IJP0s2QsrzPMntNkBvkMJdNd1U9XvkgD1tBRdeeFhpIK1XrbZyhxMvpJfrryRS+dx2W80FAy9TX55DPsSRQ5eeaaLAc25WN5paFakarVqcdQrp2kEbU42WQqV6y+Xml4TuOM13CYRiJ5nt8L9WozM6/YyIrhKBIeVvFQz7A12K1lkewxXGVPp1qYLQv1naT4WDEWMdzvdm8Ju8e3vU5qGrayW+o2jFSuONw+qWj6U8gXKhqfKsZi757+05biTl3DDLfh531E8qmQL8a+GKtjG5ZH3ro8x1Dt3OfJNye7xIKLMrxWjMU2/MO+18FzDNdJqaw41Yzc2xeMjQA0muRoe0XL8KvGuV0NnmIYB7nA2fVXpqFxhlI4iRpOU54UTZ9iONTGmmVGE8NwWWr4v+/x6xge9UbUHsLeXxiG41LD12T8HJdhpC6cxWFCLOeF1hwyDD8aZyj7hkWG+s3KF4ZhNOiMb3w3x/AQFLHyhRlLhW5zDNcOw515SbMN2w5B+zyq2YbuF1mmTrMNVXrbjXK0FU6GMjyYTTXGML4kRfoqWbV5MY7uleHK1X4DDGUNpu90JHsY+UKtVudmkpS0qC1hnrqmicK2lp/38kvYNoZQ01C18KYvIqM3+1tNV6vrbdrRratPObvSY64YTkOTdjv8wwq1nb1ksPjR33bVNNwlJWb6m9lj98TbwDzj974/XPteFPhx5WhBu131DNP3N8ZF0+Jf2i+3M/Rr/G9Ijw8bdrxtFd7jVxmq2WTNsEidPprJ4dvZnXFnnvkev/A2/Y7+rxFqhWktoaf2LVXK9nmDav/XLDsVO9ubX/0zv8Nw7G5pY5y6nzfB3N7oRadFsDbOQ6+XYGWHgmgVXApHZduVsbzbdybW3fMa9h6fh7csFrqwRhqFjoOE2A7nXddL69h1BBGV9JXgHNONmk4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADQIP4BoMgxw01zYggAAAAASUVORK5CYII=';
     }
   }
 
@@ -145,8 +145,8 @@ class _CardFormState extends State<CardForm> {
       return imageUrl;
       //return true;
     } catch (e) {
-      print(e);
-      return 'https://firebasestorage.googleapis.com/v0/b/sunny-base.appspot.com/o/Item-images%2F7170133d-f506-4ce0-b656-0db67be8e0dc1844032090079325120.jpg?alt=media&token=22adb994-97cb-45d4-869e-1fe04462d655';
+      return null;
+     // return 'https://firebasestorage.googleapis.com/v0/b/sunny-base.appspot.com/o/Item-images%2F7170133d-f506-4ce0-b656-0db67be8e0dc1844032090079325120.jpg?alt=media&token=22adb994-97cb-45d4-869e-1fe04462d655';
     }
   }
 
@@ -170,7 +170,7 @@ class _CardFormState extends State<CardForm> {
               : widget.givenItem!.image
           : imageChanged
               ? await uploadImage()
-              : 'No image';
+              : 'Немає зображення';
 
       if (!context.mounted) {
         return;
@@ -219,7 +219,7 @@ class _CardFormState extends State<CardForm> {
         final url = Uri.https(
             'sunny-base-default-rtdb.europe-west1.firebasedatabase.app',
             'item-list/${widget.givenItem!.id}.json');
-        final response = await http.patch(
+         await http.patch(
           url,
           headers: {'Content-type': 'application/json'},
           body: json.encode(
@@ -306,7 +306,7 @@ class _CardFormState extends State<CardForm> {
                     if (value == null ||
                         value.isEmpty ||
                         value.trim().length >= 50) {
-                      return 'Incorrect title';
+                      return 'Некоректна назва';
                     }
                     return null;
                   },
@@ -356,7 +356,7 @@ class _CardFormState extends State<CardForm> {
                     if (value == null ||
                         value.isEmpty ||
                         value.trim().length >= 50) {
-                      return 'Incorrect quantity';
+                      return 'Некоректна кількість';
                     }
                     return null;
                   },
@@ -380,7 +380,7 @@ class _CardFormState extends State<CardForm> {
                     if (value == null ||
                         value.isEmpty ||
                         value.trim().length >= 50) {
-                      return 'Incorrect Volume';
+                      return 'Некоректний об\'єм';
                     }
                     return null;
                   },
@@ -427,7 +427,7 @@ class _CardFormState extends State<CardForm> {
                         onPressed: showImageDialog,
                         icon: const Icon(Icons.add_a_photo_outlined),
                         label: const Text(
-                          'Add item image',
+                          'Додати зображення',
                         ),
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.fromLTRB(15, 0, 10, 0),
@@ -460,7 +460,7 @@ class _CardFormState extends State<CardForm> {
                           ),
                           OutlinedButton.icon(
                             onPressed: showImageDialog,
-                            label: const Text('Change'),
+                            label: const Text('Змінити'),
                             icon: const Icon(Icons.add_a_photo_outlined),
                           ),
                         ],
@@ -472,7 +472,7 @@ class _CardFormState extends State<CardForm> {
                     ? OutlinedButton.icon(
                         onPressed: _scanBarcode,
                         icon: const Icon(CupertinoIcons.barcode),
-                        label: const Text('Add barcode'),
+                        label: const Text('Додати штрих-код'),
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                           fixedSize: const Size(160, 85),
@@ -500,8 +500,8 @@ class _CardFormState extends State<CardForm> {
                                 ),
                                 Text(
                                   itemProvided
-                                      ? 'Code Changed!\nYou can change it again by pressing button below'
-                                      : 'Code Added!\nYou can change it by pressing button below',
+                                      ? 'Код змінено!\nВи можете змінити його знову натиснувши кнопку.'
+                                      : 'Код додано!\nВи можете змінити його натиснувши кнопку',
                                   textAlign: TextAlign.center,
                                   style: const TextStyle(
                                       color: Color.fromARGB(255, 14, 150, 19)),
@@ -511,8 +511,8 @@ class _CardFormState extends State<CardForm> {
                                 ),
                                 Text(
                                   barcodeChanged
-                                      ? 'New code is: \n$newBarcode'
-                                      : 'Code is: \n$newBarcode',
+                                      ? 'Новий код: \n$newBarcode'
+                                      : 'Код: \n$newBarcode',
                                   textAlign: TextAlign.center,
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold),
@@ -525,7 +525,7 @@ class _CardFormState extends State<CardForm> {
                           ),
                           OutlinedButton.icon(
                               onPressed: _scanBarcode,
-                              label: const Text('Change'),
+                              label: const Text('Змінити'),
                               icon: const Icon(CupertinoIcons.barcode)),
                         ],
                       ),
@@ -542,13 +542,13 @@ class _CardFormState extends State<CardForm> {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: const Text('Cancel'),
+                child: const Text('Скасувати'),
               ),
               FilledButton(
                 onPressed: onSaveItem,
                 style: FilledButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 16, 104, 176)),
-                child: const Text('Save'),
+                child: const Text('Зберегти'),
               ),
             ],
           )

@@ -33,15 +33,15 @@ class _FinalNeedsListState extends State<FinalNeedsList> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: const Text('Enter number'),
+            title: const Text('Введіть кількість'),
             content: const Text(
-                'Looks like you did\'n entered value, plese, enter number you want to add.'),
+                'Схоже, що Ви не ввели кількість товару, будь ласка, переконайтесь що зробили це.'),
             actions: [
               TextButton(
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: const Text('Okay'))
+                  child: const Text('Добре'))
             ],
           );
         },
@@ -125,7 +125,7 @@ class _FinalNeedsListState extends State<FinalNeedsList> {
                       iconSize: 15,
                       decoration: const InputDecoration(
                           label: Text(
-                        'Add:',
+                        'Додати:',
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold),
                       )),
@@ -134,7 +134,7 @@ class _FinalNeedsListState extends State<FinalNeedsList> {
                       enabled: progres < 1,
                       validator: (value) {
                         if (value!.isNotEmpty && double.parse(value) <= 0) {
-                          return 'Invalid value';
+                          return 'Неправильне значення';
                         }
                         addedValue = double.parse(value);
                         return null;

@@ -46,8 +46,6 @@ class _FindByCodeState extends State<FindByCode> {
         itemIndex = widget.listOfItems.indexOf(item);
         listItemsToEdit.add(widget.listOfItems[itemIndex!]);
         cardsFounded = true;
-
-        //print('INDEX^^^:::::::::::::::::::::$itemIndex');
       }
     }
     if (cardsFounded) {

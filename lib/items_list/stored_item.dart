@@ -37,7 +37,7 @@ class StoredItem extends StatelessWidget {
                       isInStock
                           ? const Text('')
                           : const Text(
-                              'Not in stock',
+                              'Не в наявності',
                               style: TextStyle(
                                 color: Colors.red,
                                 fontSize: 20,
@@ -78,7 +78,7 @@ class StoredItem extends StatelessWidget {
                             width: 30,
                           ),
                           Text(
-                            'Quantity: ${item.quantity.toString()}',
+                            'Кількість: ${item.quantity.toString()}',
                             style: TextStyle(
                               color: mainColor1,
                               fontSize: 18,

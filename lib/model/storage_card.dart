@@ -4,7 +4,7 @@
 
 enum Cathegory { food, drinks, medicine, hygiene, auto, amunition }
 
-enum MeasureUnit { liters, ml, kg, grams, mg, pcs }
+enum MeasureUnit { liters, ml, kg, grams, mg, pcs, pairs, metr,  }
 
 class StorageCard {
   StorageCard({

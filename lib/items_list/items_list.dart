@@ -51,7 +51,7 @@ class _ItemsListState extends State<ItemsList> {
   editCardData(StorageCard card, newCard) {
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text('Item succesfully changed'),
+      content: Text('Товар успішно змінено'),
       duration: Duration(seconds: 5),
       backgroundColor: Colors.green,
     ));
@@ -97,7 +97,7 @@ class _ItemsListState extends State<ItemsList> {
               color: Colors.white,
             ),
             Text(
-              'Edit',
+              'Змінити',
               style: TextStyle(color: Colors.white),
               textAlign: TextAlign.left,
             ),
@@ -120,7 +120,7 @@ class _ItemsListState extends State<ItemsList> {
               color: Colors.white,
             ),
             Text(
-              'Delete',
+              'Видалити',
               style: TextStyle(color: Colors.white),
               textAlign: TextAlign.right,
             ),
@@ -151,7 +151,7 @@ class _ItemsListState extends State<ItemsList> {
       if (validCounter == formKeyList.length) {
         widget.onCreateNeed!(startPoint, endPoint);
       }
-      
+
       //for(item in )
       //widget.onSaveItemGoals()
     }
@@ -171,14 +171,15 @@ class _ItemsListState extends State<ItemsList> {
                     context: context,
                     builder: (context) {
                       return AlertDialog(
-                        content:
-                            const Text('You sure you want to delete item?'),
+                        title: const Text('Ви впевнені?'),
+                        content: const Text(
+                            'Процес видалення незворотній, ви впевнені що хочете видалити картку товару?'),
                         actions: [
                           TextButton(
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
-                            child: const Text('Cancel'),
+                            child: const Text('Скасувати'),
                           ),
                           ElevatedButton.icon(
                             onPressed: () {
@@ -186,7 +187,7 @@ class _ItemsListState extends State<ItemsList> {
                               Navigator.of(context).pop();
                             },
                             icon: const Icon(CupertinoIcons.trash),
-                            label: const Text('Delete'),
+                            label: const Text('Видалити'),
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.red,
                                 foregroundColor: Colors.white),
@@ -215,11 +216,10 @@ class _ItemsListState extends State<ItemsList> {
                 constraints: const BoxConstraints(maxHeight: 355),
                 child: ListView.builder(
                   scrollDirection: Axis.vertical,
-                  
                   shrinkWrap: true,
                   physics: widget.isForFinalNeeds != null
                       ? const ClampingScrollPhysics()
-                      : const AlwaysScrollableScrollPhysics() ,
+                      : const AlwaysScrollableScrollPhysics(),
                   itemCount: widget.itemsList.length,
                   itemBuilder: (ctx, index) => Dismissible(
                     key: ValueKey(widget.itemsList[index]),
@@ -232,14 +232,15 @@ class _ItemsListState extends State<ItemsList> {
                           context: context,
                           builder: (context) {
                             return AlertDialog(
+                              title: const Text('Ви впевнені?'),
                               content: const Text(
-                                  'You sure you want to delete item?'),
+                                  'Процес видалення незворотній, ви впевнені що хочете видалити картку товару?'),
                               actions: [
                                 TextButton(
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
-                                  child: const Text('Cancel'),
+                                  child: const Text('Скасувати'),
                                 ),
                                 ElevatedButton.icon(
                                   onPressed: () {
@@ -247,7 +248,7 @@ class _ItemsListState extends State<ItemsList> {
                                     Navigator.of(context).pop();
                                   },
                                   icon: const Icon(CupertinoIcons.trash),
-                                  label: const Text('Delete'),
+                                  label: const Text('Видалити'),
                                   style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.red,
                                       foregroundColor: Colors.white),
@@ -284,11 +285,10 @@ class _ItemsListState extends State<ItemsList> {
                                   Expanded(
                                     flex: 1,
                                     child: SpinBox(
-                                      
                                       spacing: 0,
                                       decoration: const InputDecoration(
                                           label: Text(
-                                        'Start point:',
+                                        'Початкова точка:',
                                         style: TextStyle(
                                             fontSize: 20,
                                             fontWeight: FontWeight.bold),
@@ -319,7 +319,7 @@ class _ItemsListState extends State<ItemsList> {
                                       acceleration: 1,
                                       decoration: const InputDecoration(
                                           label: Text(
-                                        'Goal:',
+                                        'Ціль:',
                                         style: TextStyle(
                                             fontSize: 20,
                                             fontWeight: FontWeight.bold),
@@ -334,7 +334,7 @@ class _ItemsListState extends State<ItemsList> {
                                       validator: (value) {
                                         if (double.parse(value!) <=
                                             startPoint[index]) {
-                                          return 'Invalid value.';
+                                          return 'Невірне значення.';
                                         }
                                         if (endPoint.length >= index + 1) {
                                           endPoint.removeAt(index);
@@ -364,7 +364,7 @@ class _ItemsListState extends State<ItemsList> {
                 children: [
                   ElevatedButton.icon(
                     onPressed: onSaveGoal,
-                    label: const Text('Save items.'),
+                    label: const Text('Зберегти потребу.'),
                     icon: const Icon(Icons.save_outlined),
                     style: ElevatedButton.styleFrom(
                         foregroundColor: globals.buttonForegColor,
