@@ -2,9 +2,9 @@
 //import 'package:intl/intl.dart';
 
 
-enum Cathegory { food, drinks, medicine, hygiene, auto, amunition }
+enum Cathegory { food, drinks, medicine, hygiene, auto, amunition, canc, electronics,  }
 
-enum MeasureUnit { liters, ml, kg, grams, mg, pcs, pairs, metr,  }
+enum MeasureUnit { liters, ml, kg, grams, mg, pcs, pairs, metr, size, tonn }
 
 class StorageCard {
   StorageCard({
@@ -19,11 +19,11 @@ class StorageCard {
   }) ;
 
   final String id;
-  final int barcode;
+  final dynamic barcode;
   String title;
-  dynamic quantity;
+  double quantity;
   String image;
-  Cathegory cathegory;
+  String cathegory;
   double measureVolume;
-  MeasureUnit measureUnit;
+  String measureUnit;
 }

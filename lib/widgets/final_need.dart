@@ -40,7 +40,7 @@ class _FinalNeedState extends State<FinalNeed> {
               color: Colors.white,
             ),
             Text(
-              'Delete',
+              'Видалити',
               style: TextStyle(color: Colors.white),
               textAlign: TextAlign.right,
             ),
@@ -144,7 +144,7 @@ class _FinalNeedState extends State<FinalNeed> {
         updateTotalProgres: updateTotalProgres,
       );
     }
-    return const Text('No items');
+    return const Text('Немає потреб');
   }
 
   Widget ListFromCreatedItem() {
@@ -174,7 +174,7 @@ class _FinalNeedState extends State<FinalNeed> {
         updateTotalProgres: updateTotalProgres,
       );
     }
-    return const Text('No items');
+    return const Text('Немає потреб');
   }
 
   @override
@@ -198,13 +198,13 @@ class _FinalNeedState extends State<FinalNeed> {
                     builder: (context) {
                       return AlertDialog(
                         content:
-                            const Text('You sure you want to delete item?'),
+                            const Text('Ви впевнені що хочете видалити потребу?'),
                         actions: [
                           TextButton(
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
-                            child: const Text('Cancel'),
+                            child: const Text('Скасувати'),
                           ),
                           ElevatedButton.icon(
                             onPressed: () {
@@ -212,7 +212,7 @@ class _FinalNeedState extends State<FinalNeed> {
                               Navigator.of(context).pop();
                             },
                             icon: const Icon(CupertinoIcons.trash),
-                            label: const Text('Delete'),
+                            label: const Text('Видалити'),
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.red,
                                 foregroundColor: Colors.white),

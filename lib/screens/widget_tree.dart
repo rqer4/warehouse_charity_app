@@ -18,28 +18,30 @@ class WidgetTree extends StatelessWidget {
                 EmailAuthProvider(),
                 GoogleProvider(clientId: "261719020003-h1522mruo5h1fgou54c0hrilnbdbjkl4.apps.googleusercontent.com", ),
               ],
+
               headerBuilder: (context, constraints, shrinkOffset) {
                 return Padding(
                   padding: const EdgeInsets.all(20),
                   child: AspectRatio(
                       aspectRatio: 1,
-                      child: Image.asset('assets/images/sugar.jpg')),
+                      child: Image.asset('assets/images/gerb.png')),
                 );
               },
               subtitleBuilder: (context, action) {
                 return Padding(
+
                     padding: const EdgeInsets.symmetric(
                         vertical: 8.0, horizontal: 0),
                     child: action == AuthAction.signIn
                         ? const Text(
-                            'Welcome to Sunny base. Please sign in!',
+                            'Ласкаво просимо. Будь ласка, увійдіть!',
                             style: TextStyle(
                               color: Color.fromARGB(255, 8, 68, 118),
                               fontStyle: FontStyle.italic,
                             ),
                           )
                         : const Text(
-                            'Welcome to Sunny base. Please register!',
+                            'Ласкаво просимо. Будь ласка, зареєструйтесь!',
                             style: TextStyle(
                                 color: Color.fromARGB(255, 8, 68, 118),
                                 fontStyle: FontStyle.italic),
@@ -49,7 +51,7 @@ class WidgetTree extends StatelessWidget {
                 return const Padding(
                   padding: EdgeInsets.only(top: 16),
                   child: Text(
-                    'Bu singing in, you agree with our terms and conditions.',
+                    'Натискаючи вхід, Ви погоджуєтесь з правилами використання.',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.grey,
@@ -61,8 +63,8 @@ class WidgetTree extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.all(20),
                   child: AspectRatio(
-                    aspectRatio: 1,
-                    child: Image.asset('assets/images/soda.jpg'),
+                    aspectRatio: 0.5,
+                    child: Image.asset('assets/images/gerb.png'),
                   ),
                 );
               },

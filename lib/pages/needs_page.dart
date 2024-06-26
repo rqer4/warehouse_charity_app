@@ -170,7 +170,7 @@ class _NeedsPageState extends State<NeedsPage> {
               size: 50.0,
             ),
             Text(
-              'There is no needs. \nYou can add some!',
+              'Немає потреб. \nВи можете створити нову!',
               textAlign: TextAlign.center,
               style: GoogleFonts.robotoSlab(fontSize: 24, letterSpacing: 3),
             )

@@ -14,7 +14,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final List<Text> _tabsTitles = [
     const Text('Sunny Base'),
-    const Text('My account'),
+    const Text('Мій профіль'),
   ];
 
   final List<Widget> _tabs = [
@@ -26,7 +26,7 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.all(2),
           child: AspectRatio(
             aspectRatio: 1,
-            child: Image.asset('assets/images/sugar.jpg'),
+            child: Image.asset('assets/images/gerb.png'),
           ),
         )
       ],
@@ -59,11 +59,11 @@ class _HomePageState extends State<HomePage> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.list_alt_rounded),
-            label: 'List',
+            label: 'Сховище',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_rounded),
-            label: 'Account',
+            label: 'Профіль',
           ),
         ],
         currentIndex: selectedIndex,

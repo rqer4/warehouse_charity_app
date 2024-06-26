@@ -14,8 +14,9 @@ class ListPage extends StatefulWidget {
   ListPage({
     super.key,
     required this.registeredItems,
+    this.isItems,
   });
-
+  bool? isItems;
   List<StorageCard> registeredItems;
 
   @override
@@ -25,6 +26,7 @@ class ListPage extends StatefulWidget {
 }
 
 class _ListPageState extends State<ListPage> {
+  late Widget mainContent;
   void _onRemoveItem(StorageCard itemCard) async {
     final itemIndex = widget.registeredItems.indexOf(itemCard);
     setState(() {
@@ -44,10 +46,44 @@ class _ListPageState extends State<ListPage> {
     }
   }
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    mainContent = assingMain(widget.isItems!);
+  }
+
   void _addItemToList(StorageCard item) {
     setState(() {
-      widget.registeredItems.add(item);
+      widget.registeredItems.insert(0, item);
     });
+  }
+
+  Widget assingMain(bool isListEmpty) {
+    return isListEmpty
+        ? Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(
+                    height: 60,
+                    width: 60,
+                    child: Icon(
+                      Icons.find_in_page_outlined,
+                      size: 50,
+                    )),
+                Text(
+                  'Товари не знайдено. \nTry to add some!',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.robotoSlab(fontSize: 24, letterSpacing: 3),
+                )
+              ],
+            ),
+          )
+        : ItemsList(
+            itemsList: widget.registeredItems,
+            removeItem: _onRemoveItem,
+          );
   }
 
   void _openAddItemWindow() async {
@@ -74,7 +110,7 @@ class _ListPageState extends State<ListPage> {
 
   void _openFindItemWindow() async {
     String scannedBarcode = await FlutterBarcodeScanner.scanBarcode(
-        '#ff6666', 'Cancel', true, ScanMode.BARCODE);
+        '#ff6666', 'Скасувати', true, ScanMode.BARCODE);
 
     await Navigator.of(context).push<StorageCard>(
       MaterialPageRoute(
@@ -84,6 +120,7 @@ class _ListPageState extends State<ListPage> {
           scannedBarcode: int.parse(scannedBarcode),
           changeInitialList: itemEditedByCode,
           addNewItemToList: _addItemToList,
+          removeItem: _onRemoveItem,
         ),
       ),
     );
@@ -93,8 +130,7 @@ class _ListPageState extends State<ListPage> {
 
   @override
   Widget build(BuildContext context) {
-    
-    Widget mainContent = widget.registeredItems.isNotEmpty
+    mainContent = widget.registeredItems.isNotEmpty
         ? ItemsList(
             itemsList: widget.registeredItems,
             removeItem: _onRemoveItem,
@@ -111,7 +147,7 @@ class _ListPageState extends State<ListPage> {
                       size: 50,
                     )),
                 Text(
-                  'No items found. \nTry to add some!',
+                  'Товари не знайдено. \nСпробуйте додати!',
                   textAlign: TextAlign.center,
                   style: GoogleFonts.robotoSlab(fontSize: 24, letterSpacing: 3),
                 )
@@ -134,12 +170,12 @@ class _ListPageState extends State<ListPage> {
           SpeedDialChild(
             child: const Icon(CupertinoIcons.barcode_viewfinder),
             onTap: _openFindItemWindow,
-            label: 'Find by code',
+            label: 'Знайти за кодом',
           ),
           SpeedDialChild(
             child: const Icon(Icons.edit),
             onTap: _openAddItemWindow,
-            label: 'Add new item',
+            label: 'Створити товар',
           )
         ],
         child: const Icon(Icons.add),

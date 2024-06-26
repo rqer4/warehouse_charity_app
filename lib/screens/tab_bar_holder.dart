@@ -17,7 +17,7 @@ class TabBarHolder extends StatefulWidget {
 
 class _TabBarHolderState extends State<TabBarHolder> {
   List<StorageCard> _registeredItems = [];
-
+  bool isItems = false;
   @override
   initState() {
     super.initState();
@@ -49,36 +49,18 @@ class _TabBarHolderState extends State<TabBarHolder> {
     final List<StorageCard> loadedItems = [];
 
     for (final item in listData.entries) {
-      final cathegoryList = List.of(Cathegory.values);
-
-      final measureUnitsList = List.of(MeasureUnit.values);
-
-      Cathegory cathegory = Cathegory.amunition;
-      MeasureUnit measureUnit = MeasureUnit.pcs;
-
-      for (final cat in cathegoryList) {
-        if (cat.name.toString() == item.value['cathegory']) {
-          cathegory = cat;
-          break;
-        }
-      }
-      for (final unit in measureUnitsList) {
-        if (unit.name.toString() == item.value['measureUnit']) {
-          measureUnit = unit;
-          break;
-        }
-      }
-
-      loadedItems.add(
+      loadedItems.add(//careful
         StorageCard(
             id: item.key,
-            barcode: int.parse(item.value['barcode']),
+            barcode: int.tryParse(item.value['barcode']) != null
+                ? int.parse(item.value['barcode'])
+                : item.value['barcode'],
             image: item.value['image'],
-            quantity: item.value['quantity'],
+            quantity: double.parse(item.value['quantity'].toString()),
             title: item.value['title'],
-            cathegory: cathegory,
+            cathegory: item.value['cathegory'],
             measureVolume: item.value['measureVolume'],
-            measureUnit: measureUnit),
+            measureUnit: item.value['measureUnit']),
       );
     }
 
@@ -117,6 +99,7 @@ class _TabBarHolderState extends State<TabBarHolder> {
           children: [
             ListPage(
               registeredItems: _registeredItems,
+              isItems: _registeredItems.isNotEmpty,
             ),
             NeedsPage(
               changeQuantityInList: changeInitialListAfterNeedEdit,

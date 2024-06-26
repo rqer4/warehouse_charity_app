@@ -105,12 +105,13 @@ class _AddNeedState extends State<AddNeed> {
 
   void _openFindItemWindow() async {
     String scannedBarcode = await FlutterBarcodeScanner.scanBarcode(
-        '#ff6666', 'Cancel', true, ScanMode.BARCODE);
+        '#ff6666', 'Скасувати', true, ScanMode.BARCODE);
 
     await Navigator.of(context).push<StorageCard>(
       MaterialPageRoute(
         builder: (ctx) => FindByCode(
           inNeeds: true,
+          isFindForNeed: true,
           listOfItems: widget.listOfItems,
           scannedBarcode: int.parse(scannedBarcode),
           sendItemToNeeds: addToListOfNeedsItems,
@@ -120,7 +121,7 @@ class _AddNeedState extends State<AddNeed> {
       ),
     );
 
-    //return;
+    return;
   }
 
   void addToListOfNeedsItems(StorageCard card) {
@@ -175,7 +176,7 @@ class _AddNeedState extends State<AddNeed> {
                                   if (value == null ||
                                       value.isEmpty ||
                                       value.length > 20) {
-                                    return 'Invalid title';
+                                    return 'Некоректна назва';
                                   }
                                   return null;
                                 },
@@ -198,7 +199,7 @@ class _AddNeedState extends State<AddNeed> {
                                 children: [
                                   Text(
                                     deadline == null
-                                        ? 'Deadline date\'s\n   not selected'
+                                        ? 'Дата дедлайну\n   не обрана'
                                         : 'Дедлайн:\n${formater.format(deadline!)}',
                                     style: const TextStyle(
                                       fontWeight: FontWeight.bold,
@@ -219,7 +220,7 @@ class _AddNeedState extends State<AddNeed> {
                                 child: NeedsItem(
                                   needItem: NeedsCard(
                                     parentId: DateTime.now().toString(),
-                                    title: 'Selected Items:',
+                                    title: 'Обрані товари:',
                                     childrens: listOfNeedsItems,
                                   ),
                                   onRemoveChild: _onRemoveItem,
@@ -235,7 +236,7 @@ class _AddNeedState extends State<AddNeed> {
                                       Padding(
                                         padding: const EdgeInsets.only(top: 15),
                                         child: Text(
-                                          'No added items yet. \n',
+                                          'Товари не додано. \n',
                                           style: GoogleFonts.robotoSlab(
                                               fontSize: 20),
                                         ),
@@ -243,7 +244,7 @@ class _AddNeedState extends State<AddNeed> {
                                     ],
                                   ),
                                   const Text(
-                                    'Scan the code and add some by pressing button below',
+                                    'Відскануйте код, щоб додати, натиснувши кнопку внизу.',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(fontSize: 16),
                                   ),
@@ -254,7 +255,7 @@ class _AddNeedState extends State<AddNeed> {
                                     onPressed: () {
                                       onCreateNeed(null, null);
                                     },
-                                    label: const Text('Save items.'),
+                                    label: const Text('Додати потребу.'),
                                     icon: const Icon(Icons.save_outlined),
                                     style: ElevatedButton.styleFrom(
                                         foregroundColor:
@@ -274,7 +275,7 @@ class _AddNeedState extends State<AddNeed> {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                label: const Text('Back to needs list.'),
+                label: const Text('Назад до потреб.'),
                 icon: const Icon(Icons.keyboard_backspace_rounded),
               )
             ],
@@ -285,7 +286,7 @@ class _AddNeedState extends State<AddNeed> {
 
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Create need'),
+          title: const Text('Створити потребу'),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: SizedBox(

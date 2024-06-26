@@ -45,7 +45,7 @@ class StoredItem extends StatelessWidget {
                               ),
                             ),
                       Text(
-                        item.cathegory.name.toUpperCase().toString(),
+                        item.cathegory.toUpperCase().toString(),
                         style: TextStyle(color: mainColor2),
                       ),
                     ],
@@ -68,7 +68,7 @@ class StoredItem extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            '${item.measureVolume.toString()} ${item.measureUnit.name.toString()}',
+                            '${item.measureVolume.toString()} ${item.measureUnit}',
                             style: TextStyle(
                               color: mainColor1,
                               fontStyle: FontStyle.italic,
@@ -114,7 +114,7 @@ class StoredItem extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          item.cathegory.name.toUpperCase().toString(),
+                          item.cathegory.toUpperCase().toString(),
                           style: TextStyle(color: mainColor2),
                         ),
                         Text(
@@ -125,7 +125,7 @@ class StoredItem extends StatelessWidget {
                               color: mainColor1),
                         ),
                         Text(
-                          '${item.measureVolume.toString()} ${item.measureUnit.name.toString()}',
+                          '${item.measureVolume.toString()} ${item.measureUnit}',
                           style: TextStyle(
                             color: mainColor1,
                             fontStyle: FontStyle.italic,

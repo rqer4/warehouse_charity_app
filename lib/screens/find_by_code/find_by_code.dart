@@ -15,10 +15,14 @@ class FindByCode extends StatefulWidget {
       required this.inNeeds,
       this.changeInitialList,
       this.addNewItemToList,
-      this.sendItemToNeeds});
+      this.sendItemToNeeds,
+      this.removeItem,
+      this.isFindForNeed});
+  bool? isFindForNeed;
   List<StorageCard> listOfItems;
   final int scannedBarcode;
   final bool inNeeds;
+  final void Function(StorageCard itemCard)? removeItem;
   void Function(StorageCard editedItem, int indeOfItem)? changeInitialList;
   void Function(StorageCard item)? addNewItemToList;
   Function(StorageCard card)? sendItemToNeeds;
@@ -63,11 +67,12 @@ class _FindByCodeState extends State<FindByCode> {
     setState(() {
       listItemsToEdit.removeAt(itemIndex);
     });
+    widget.isFindForNeed == null ? widget.removeItem!(itemCard) : null;
   }
 
   _scanBarcode() async {
     scannedBarcode = await FlutterBarcodeScanner.scanBarcode(
-        '#ff6666', 'Cancel', true, ScanMode.BARCODE);
+        '#ff6666', 'Скасувати', true, ScanMode.BARCODE);
     return (int.parse(scannedBarcode!));
   }
 
@@ -108,7 +113,7 @@ class _FindByCodeState extends State<FindByCode> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-              'Item not found. \nYou can try again, or create new item by pressing button below.',
+              'Товар не знайдено. \nВи можете спробувати ще раз, або додати новий, натиснувши кнопку внизу.',
               textAlign: TextAlign.center,
               style: GoogleFonts.robotoSlab(
                   fontSize: 24, fontStyle: FontStyle.italic)),
@@ -120,7 +125,7 @@ class _FindByCodeState extends State<FindByCode> {
               _findCard(null);
             },
             icon: const Icon(CupertinoIcons.barcode_viewfinder),
-            label: const Text('Find by code!'),
+            label: const Text('Знайти за кодом!'),
             style: ElevatedButton.styleFrom(
                 minimumSize: const Size(200, 40),
                 backgroundColor: buttonBackColor,
@@ -131,7 +136,7 @@ class _FindByCodeState extends State<FindByCode> {
               _createNewItem(scannedBarcode!);
             },
             icon: const Icon(CupertinoIcons.add),
-            label: const Text('Create new item!'),
+            label: const Text('Створити товар!'),
             style: ElevatedButton.styleFrom(
                 minimumSize: const Size(200, 40),
                 backgroundColor: buttonBackColor,
@@ -141,26 +146,31 @@ class _FindByCodeState extends State<FindByCode> {
             onPressed: () {
               Navigator.pop(context);
             },
-            label: const Text('Back to list.'),
+            label: const Text('Назад до товарів.'),
             icon: const Icon(Icons.keyboard_backspace_rounded),
           )
         ]);
   }
 
   editCardData(StorageCard card, newCard) {
-    return setState(() {
-      cardEdited = true;
-      itemIndex = widget.listOfItems.indexOf(card);  
-      widget.changeInitialList!(newCard, itemIndex!);
-    });
+    return widget.changeInitialList != null
+        ? setState(() {
+            cardEdited = true;
+            itemIndex = widget.listOfItems.indexOf(card);
+            widget.changeInitialList!(newCard, itemIndex!);
+          })
+        : null;
   }
 
   void addCardToNeeds(StorageCard? card) {
     card == null
-        ? {widget.sendItemToNeeds!(listItemsToEdit[listItemsToEdit.length-1]), Navigator.pop(context)}
+        ? {
+            widget
+                .sendItemToNeeds!(listItemsToEdit[listItemsToEdit.length - 1]),
+            Navigator.pop(context)
+          }
         : widget.sendItemToNeeds!(card);
   }
-
 
   Widget foundedCard() {
     return Column(children: [
@@ -168,26 +178,51 @@ class _FindByCodeState extends State<FindByCode> {
         itemsList: listItemsToEdit,
         removeItem: _onRemoveItem,
         changeItemInItitialList: editCardData,
+        isForFinalNeeds: true,
       ),
       widget.inNeeds
           ? ElevatedButton.icon(
               onPressed: () {
-                addCardToNeeds(null);
+                listItemsToEdit.isNotEmpty
+                    ? addCardToNeeds(null)
+                    : showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text('Товар відсутній'),
+                            content: const Text(
+                                'Схоже ви вдалили знайдений товар. Відскануйте код існуючого товару для продовження.'),
+                            actions: [
+                              ElevatedButton.icon(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                icon: const Icon(CupertinoIcons.checkmark_alt_circle),
+                                label: const Text('Добре'),
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.blue,
+                                    foregroundColor: Colors.white),
+                              )
+                            ],
+                          );
+                        },
+                      );
               },
               icon: const Icon(Icons.edit),
-              label: const Text('Add this item!'),
+              label: const Text('Додати цей товар!'),
               style: ElevatedButton.styleFrom(
                   minimumSize: const Size(200, 40),
                   backgroundColor: buttonBackColor,
                   foregroundColor: buttonForegColor),
             )
-          : const Text('Swipe right to edit item'),
+          : const Text(
+              'Свайпніть вліво, щоб редагувати\nСвайпнiть вправо щоб видалити'),
       ElevatedButton.icon(
         onPressed: () {
           _findCard(null);
         },
         icon: const Icon(CupertinoIcons.barcode_viewfinder),
-        label: const Text('Find by code!'),
+        label: const Text('Знайти за кодом!'),
         style: ElevatedButton.styleFrom(
             minimumSize: const Size(200, 40),
             backgroundColor: buttonBackColor,
@@ -202,7 +237,7 @@ class _FindByCodeState extends State<FindByCode> {
                 }
               : Navigator.pop(context);
         },
-        label: Text(widget.inNeeds ? 'Back to Needs' : 'Back to list.'),
+        label: Text(widget.inNeeds ? 'Назад до потреб' : 'Назад до товарів.'),
         icon: const Icon(Icons.keyboard_backspace_rounded),
       )
     ]);
@@ -212,7 +247,7 @@ class _FindByCodeState extends State<FindByCode> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Find item by code'),
+          title: const Text('Знайти за кодом'),
         ),
         body: Padding(
           padding: const EdgeInsets.all(10),

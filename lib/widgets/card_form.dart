@@ -14,8 +14,10 @@ class CardForm extends StatefulWidget {
 
   StorageCard? givenItem;
   //void Function(bool imageFrom) addImage;
-  void Function(StorageCard card, StorageCard newCard)? editItem;
+  void Function(StorageCard card, StorageCard newCard, bool isCanceled)?
+      editItem;
   String? barcode;
+  //bool? isCanceled;
   @override
   State<CardForm> createState() => _CardFormState();
 }
@@ -28,7 +30,7 @@ class _CardFormState extends State<CardForm> {
   String imageUrl = '';
   bool imageChanged = false;
 
-  int newQuantity = 1;
+  double newQuantity = 1.0;
   var newMeasureValue = 100.0;
   var newTitle = '';
 
@@ -37,7 +39,30 @@ class _CardFormState extends State<CardForm> {
   bool cathegoryChanged = false;
   bool measureUnitChanged = false;
   bool itemProvided = false;
-
+  String categorisStringInitial = 'авто';
+  String measureStringInitial = 'кг';
+  Map<Cathegory, String> categorisString = {
+    Cathegory.auto: 'авто',
+    Cathegory.amunition: 'амуніція',
+    Cathegory.drinks: 'напої',
+    Cathegory.food: 'продукти',
+    Cathegory.hygiene: 'гігієна',
+    Cathegory.medicine: 'медицина',
+    Cathegory.canc: 'канцелярія',
+    Cathegory.electronics: 'електроніка',
+  };
+  Map<MeasureUnit, String> measuresString = {
+    MeasureUnit.grams: 'грам',
+    MeasureUnit.kg: 'кг',
+    MeasureUnit.liters: 'літр',
+    MeasureUnit.metr: 'метр',
+    MeasureUnit.mg: 'мг',
+    MeasureUnit.ml: 'мл',
+    MeasureUnit.pairs: 'пар',
+    MeasureUnit.pcs: 'штук',
+    MeasureUnit.size: 'розмір',
+    MeasureUnit.tonn: 'тон',
+  };
   Cathegory _newCathegory = Cathegory.food;
   MeasureUnit _newMeasureUnit = MeasureUnit.kg;
 
@@ -64,23 +89,13 @@ class _CardFormState extends State<CardForm> {
   }
 
   Widget noValueAlert() {
-    final bool isBarcode = int.tryParse(newBarcode!) == null;
     return AlertDialog(
-      actions: [
-        ElevatedButton(
-            onPressed: Navigator.of(context).pop, child: const Text('Добре'))
-      ],
-      content: (selectedImageName.isEmpty && isBarcode)
-          ? const Text('Будь ласка, додайте зображення та штрих-код')
-          : (isBarcode)
-              ? const Text('Будь ласка, додайте штрих-код')
-              : const Text('Будь ласка, додайте зображення'),
-      title: (selectedImageName.isEmpty && isBarcode)
-          ? const Text('Відсутнє зображення та код')
-          : (isBarcode)
-              ? const Text('Відсутній код')
-              : const Text('Відсутнє зображення'),
-    );
+        actions: [
+          ElevatedButton(
+              onPressed: Navigator.of(context).pop, child: const Text('Добре'))
+        ],
+        content: const Text('Будь ласка, додайте зображення'),
+        title: const Text('Відсутнє зображення '));
   }
 
   void showImageDialog() {
@@ -146,14 +161,14 @@ class _CardFormState extends State<CardForm> {
       //return true;
     } catch (e) {
       return null;
-     // return 'https://firebasestorage.googleapis.com/v0/b/sunny-base.appspot.com/o/Item-images%2F7170133d-f506-4ce0-b656-0db67be8e0dc1844032090079325120.jpg?alt=media&token=22adb994-97cb-45d4-869e-1fe04462d655';
+      // return 'https://firebasestorage.googleapis.com/v0/b/sunny-base.appspot.com/o/Item-images%2F7170133d-f506-4ce0-b656-0db67be8e0dc1844032090079325120.jpg?alt=media&token=22adb994-97cb-45d4-869e-1fe04462d655';
     }
   }
 
   void onSaveItem() async {
     if (_formKey.currentState!.validate()) {
       if (!itemProvided) {
-        if (selectedImageName.isEmpty || (int.tryParse(newBarcode!) == null)) {
+        if (selectedImageName.isEmpty) {
           showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -176,6 +191,7 @@ class _CardFormState extends State<CardForm> {
         return;
       }
 
+      Navigator.of(context).pop();
       if (!itemProvided) {
         final url = Uri.https(
             'sunny-base-default-rtdb.europe-west1.firebasedatabase.app',
@@ -189,9 +205,9 @@ class _CardFormState extends State<CardForm> {
               'quantity': newQuantity,
               'title': newTitle,
               'barcode': newBarcode,
-              'cathegory': _newCathegory.name,
+              'cathegory': categorisString[_newCathegory],
               'measureVolume': newMeasureValue,
-              'measureUnit': _newMeasureUnit.name,
+              'measureUnit': measuresString[_newMeasureUnit],
             },
           ),
         );
@@ -208,18 +224,19 @@ class _CardFormState extends State<CardForm> {
                 )
                 .replaceRange(20, 21,
                     ''), //!!!!!!!!!!!!!!!!!   CHANGE LATER    !!!!!!!!!!!!!!!!!!!
-            barcode: int.parse(newBarcode!),
+            barcode:
+                newBarcode != null ? int.parse(newBarcode!) : 'Код не задано',
             image: imgUrl,
             quantity: newQuantity,
             title: newTitle,
-            cathegory: _newCathegory,
+            cathegory: categorisString[_newCathegory]!,
             measureVolume: newMeasureValue,
-            measureUnit: _newMeasureUnit));
+            measureUnit: measuresString[_newMeasureUnit]!));
       } else {
         final url = Uri.https(
             'sunny-base-default-rtdb.europe-west1.firebasedatabase.app',
             'item-list/${widget.givenItem!.id}.json');
-         await http.patch(
+        await http.patch(
           url,
           headers: {'Content-type': 'application/json'},
           body: json.encode(
@@ -228,27 +245,26 @@ class _CardFormState extends State<CardForm> {
               'quantity': newQuantity,
               'title': newTitle,
               'barcode': newBarcode,
-              'cathegory': _newCathegory.name,
+              'cathegory': categorisString[_newCathegory],
               'measureVolume': newMeasureValue,
-              'measureUnit': _newMeasureUnit.name,
+              'measureUnit': measuresString[_newMeasureUnit],
             },
           ),
         );
         //!!!!!!!!!!!!!!!!!   CHANGE LATER    !!!!!!!!!!!!!!!!!!!
         //!!!!!!!!!!!!!!!!!   CHANGE LATER    !!!!!!!!!!!!!!!!!!!
         final itemToPass = StorageCard(
-            id: widget.givenItem!.id, //!!!!!!!!!!!!!!!!!   CHANGE LATER    !!!!!!!!!!!!!!!!!!!
+            id: widget.givenItem!
+                .id, //!!!!!!!!!!!!!!!!!   CHANGE LATER    !!!!!!!!!!!!!!!!!!!
             barcode: int.parse(newBarcode!),
             image: imgUrl,
             quantity: newQuantity,
             title: newTitle,
-            cathegory: _newCathegory,
+            cathegory: categorisString[_newCathegory]!,
             measureVolume: newMeasureValue,
-            measureUnit: _newMeasureUnit);
+            measureUnit: measuresString[_newMeasureUnit]!);
 
-        widget.editItem!(widget.givenItem! ,itemToPass );
-
-        Navigator.of(context).pop();
+        widget.editItem!(widget.givenItem!, itemToPass, false);
       }
     }
     return;
@@ -274,17 +290,23 @@ class _CardFormState extends State<CardForm> {
           ? newBarcode
           : itemProvided
               ? widget.givenItem!.barcode.toString()
-              : 'No code yet';
+              : 'Немає коду';
     }
     _newCathegory = cathegoryChanged
         ? _newCathegory
         : itemProvided
-            ? widget.givenItem!.cathegory
+            ? categorisString.entries
+                .firstWhere(
+                    (entry) => entry.value == widget.givenItem!.cathegory)
+                .key
             : _newCathegory;
     _newMeasureUnit = measureUnitChanged
         ? _newMeasureUnit
         : itemProvided
-            ? widget.givenItem!.measureUnit
+            ? measuresString.entries
+                .firstWhere(
+                    (entry) => entry.value == widget.givenItem!.measureUnit)
+                .key
             : _newMeasureUnit;
 
     return Form(
@@ -325,7 +347,8 @@ class _CardFormState extends State<CardForm> {
                       .map(
                         (cathegory) => DropdownMenuItem(
                           value: cathegory,
-                          child: Text(cathegory.name.toUpperCase()),
+                          child:
+                              Text(categorisString[cathegory]!.toUpperCase()),
                         ),
                       )
                       .toList(),
@@ -361,7 +384,7 @@ class _CardFormState extends State<CardForm> {
                     return null;
                   },
                   onSaved: (value) {
-                    newQuantity = int.parse(value!);
+                    newQuantity = double.parse(value!);
                   },
                 ),
               ),
@@ -400,7 +423,7 @@ class _CardFormState extends State<CardForm> {
                       .map(
                         (measureUnit) => DropdownMenuItem(
                           value: measureUnit,
-                          child: Text(measureUnit.name),
+                          child: Text(measuresString[measureUnit]!),
                         ),
                       )
                       .toList(),
@@ -526,7 +549,8 @@ class _CardFormState extends State<CardForm> {
                           OutlinedButton.icon(
                               onPressed: _scanBarcode,
                               label: const Text('Змінити'),
-                              icon: const Icon(CupertinoIcons.barcode)),
+                              icon: const Icon(
+                                  CupertinoIcons.barcode_viewfinder)),
                         ],
                       ),
               ),
@@ -540,7 +564,21 @@ class _CardFormState extends State<CardForm> {
             children: [
               TextButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  if (widget.givenItem != null) {
+                    final itemToPass = StorageCard(
+                        id: widget.givenItem!
+                            .id, //!!!!!!!!!!!!!!!!!   CHANGE LATER    !!!!!!!!!!!!!!!!!!!
+                        barcode: widget.givenItem!.barcode,
+                        image: widget.givenItem!.image,
+                        quantity: widget.givenItem!.quantity,
+                        title: widget.givenItem!.title,
+                        cathegory: widget.givenItem!.cathegory,
+                        measureVolume: widget.givenItem!.measureVolume,
+                        measureUnit: widget.givenItem!.measureUnit);
+
+                    widget.editItem!(widget.givenItem!, itemToPass, true);
+                  }
+                  Navigator.of(context).pop();
                 },
                 child: const Text('Скасувати'),
               ),

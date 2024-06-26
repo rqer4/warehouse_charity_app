@@ -27,14 +27,14 @@ class _PickImageState extends State<PickImage> {
           child: Wrap(
             children: [
               ListTile(
-                title: const Text('Camera'),
+                title: const Text('Камера'),
                 onTap: () {
                   _addImage(true);
                   Navigator.pop(context);
                 },
               ),
               ListTile(
-                  title: const Text('Gallery'),
+                  title: const Text('Галерея'),
                   onTap: () {
                     _addImage(false);
                     Navigator.pop(context);
@@ -66,7 +66,7 @@ class _PickImageState extends State<PickImage> {
                 onPressed: _showDialog,
                 icon: const Icon(Icons.add_a_photo_outlined),
                 label: const Text(
-                  'Add item image',
+                  'Додати зображення',
                 ),
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.fromLTRB(15, 0, 10, 0),
@@ -91,7 +91,7 @@ class _PickImageState extends State<PickImage> {
                   ),
                   OutlinedButton.icon(
                     onPressed: _showDialog,
-                    label: const Text('Change'),
+                    label: const Text('Змінити'),
                     icon: const Icon(Icons.add_a_photo_outlined),
                   ),
                 ],

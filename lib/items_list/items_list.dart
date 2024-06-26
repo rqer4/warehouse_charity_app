@@ -48,23 +48,44 @@ class _ItemsListState extends State<ItemsList> {
   //   endPoint.add(widget.itemsList[index].quantity + 1);
   // }
 
-  editCardData(StorageCard card, newCard) {
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text('Товар успішно змінено'),
-      duration: Duration(seconds: 5),
-      backgroundColor: Colors.green,
-    ));
+  editCardData(StorageCard card, newCard, bool isCanceled) {
+    if (!isCanceled) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Товар успішно змінено'),
+        duration: Duration(seconds: 5),
+        backgroundColor: Colors.green,
+      ));
 
-    return setState(() {
-      //cardEdited = true;
-      listItemToEdit = newCard;
-      itemIndex = widget.itemsList.indexOf(card);
-      widget.itemsList[itemIndex!] = listItemToEdit!;
-      if (widget.changeItemInItitialList != null) {
-        widget.changeItemInItitialList!(card, newCard);
-      }
-    });
+      setState(() {
+        //cardEdited = true;
+        listItemToEdit = newCard;
+        itemIndex = widget.itemsList.indexOf(card);
+        widget.itemsList[itemIndex!] = listItemToEdit!;
+        if (widget.changeItemInItitialList != null) {
+          widget.changeItemInItitialList!(card, newCard);
+        }
+      });
+      return;
+    } else {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Зміни скасовано'),
+        duration: Duration(seconds: 5),
+        backgroundColor: Colors.grey,
+      ));
+
+      setState(() {
+        //cardEdited = true;
+        listItemToEdit = newCard;
+        itemIndex = widget.itemsList.indexOf(card);
+        widget.itemsList[itemIndex!] = listItemToEdit!;
+        if (widget.changeItemInItitialList != null) {
+          widget.changeItemInItitialList!(card, newCard);
+        }
+      });
+      return;
+    }
   }
 
   void editCard(StorageCard card) {
@@ -79,6 +100,7 @@ class _ItemsListState extends State<ItemsList> {
                 editItem: editCardData,
               ));
         });
+    //return;
   }
 
   Widget swipeLeftBackground() {
@@ -110,21 +132,25 @@ class _ItemsListState extends State<ItemsList> {
   Widget swipeRightBackground() {
     return Container(
       color: Colors.red,
-      child: const Align(
+      child: Align(
         alignment: Alignment.centerRight,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
-            Icon(
+            const Icon(
               Icons.edit,
               color: Colors.white,
             ),
             Text(
-              'Видалити',
-              style: TextStyle(color: Colors.white),
+              widget.isForNeeds == null
+                  ? 'Видалити'
+                  : widget.isForFinalNeeds == null
+                      ? 'Прибрати'
+                      : 'Видалити',
+              style: const TextStyle(color: Colors.white),
               textAlign: TextAlign.right,
             ),
-            SizedBox(
+            const SizedBox(
               width: 20,
             ),
           ],
@@ -167,68 +193,8 @@ class _ItemsListState extends State<ItemsList> {
               background: swipeLeftBackground(),
               confirmDismiss: (direction) async {
                 if (direction == DismissDirection.endToStart) {
-                  await showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: const Text('Ви впевнені?'),
-                        content: const Text(
-                            'Процес видалення незворотній, ви впевнені що хочете видалити картку товару?'),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text('Скасувати'),
-                          ),
-                          ElevatedButton.icon(
-                            onPressed: () {
-                              widget.removeItem!(widget.itemsList[index]);
-                              Navigator.of(context).pop();
-                            },
-                            icon: const Icon(CupertinoIcons.trash),
-                            label: const Text('Видалити'),
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.red,
-                                foregroundColor: Colors.white),
-                          )
-                        ],
-                      );
-                    },
-                  );
-                } else {
-                  editCard(
-                    widget.itemsList[index],
-                  );
-                }
-                return null;
-              },
-              onDismissed: (direction) {},
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                child: StoredItem(widget.itemsList[index]),
-              ),
-            ),
-          )
-        : Column(
-            children: [
-              Container(
-                constraints: const BoxConstraints(maxHeight: 355),
-                child: ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  physics: widget.isForFinalNeeds != null
-                      ? const ClampingScrollPhysics()
-                      : const AlwaysScrollableScrollPhysics(),
-                  itemCount: widget.itemsList.length,
-                  itemBuilder: (ctx, index) => Dismissible(
-                    key: ValueKey(widget.itemsList[index]),
-                    secondaryBackground: swipeLeftBackground(),
-                    background: swipeLeftBackground(),
-                    //direction: DismissDirection.startToEnd,
-                    confirmDismiss: (direction) async {
-                      if (direction == DismissDirection.endToStart) {
-                        bool res = await showDialog(
+                  widget.isForFinalNeeds == null
+                      ? await showDialog(
                           context: context,
                           builder: (context) {
                             return AlertDialog(
@@ -256,15 +222,57 @@ class _ItemsListState extends State<ItemsList> {
                               ],
                             );
                           },
-                        );
-                        return res;
+                        )
+                      : widget.removeItem!(widget.itemsList[index]);
+                } else {
+                  editCard(
+                    widget.itemsList[index],
+                  );
+                }
+                return null;
+              },
+              onDismissed: (direction) {},
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                child: StoredItem(widget.itemsList[index]),
+              ),
+            ),
+          )
+        : Column(
+            children: [
+              Container(
+                constraints: const BoxConstraints(maxHeight: 355),
+                child: ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  physics: widget.isForFinalNeeds != null
+                      ? const ClampingScrollPhysics()
+                      : const AlwaysScrollableScrollPhysics(),
+                  itemCount: widget.itemsList.length,
+                  itemBuilder: (ctx, index) => Dismissible(
+                    key: ValueKey(widget.itemsList[index]),
+                    secondaryBackground: swipeRightBackground(),
+                    background: swipeLeftBackground(),
+                    //direction: DismissDirection.startToEnd,
+                    confirmDismiss: (direction) async {
+                      if (direction == DismissDirection.endToStart) {
+                        widget.removeItem!(widget.itemsList[index]);
+
+                        return true;
                       } else {
                         editCard(widget.itemsList[index]);
                         return true;
                       }
                     },
-                    onDismissed: (direction) {
-                      //widget.removeItem(widget.itemsList[index]);
+                    onDismissed: (direction) async {
+                      // if (direction == DismissDirection.endToStart) {
+                      //   widget.removeItem!(widget.itemsList[index]);
+
+                      //   //return true;
+                      // } else {
+                      //   editCard(widget.itemsList[index]);
+                      //  // return true;
+                      // }
                     },
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
@@ -288,7 +296,7 @@ class _ItemsListState extends State<ItemsList> {
                                       spacing: 0,
                                       decoration: const InputDecoration(
                                           label: Text(
-                                        'Початкова точка:',
+                                        'Старт:',
                                         style: TextStyle(
                                             fontSize: 20,
                                             fontWeight: FontWeight.bold),
