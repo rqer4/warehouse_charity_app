@@ -1,16 +1,30 @@
-# synny_space
+## Resume 
+This is mobile app for warehouse management built specifically for charity organizations.
 
-A new Flutter project.
+## Features
+#### Warehouse management:
+- Barcode scan
+- Creating new items
+- Search in database of created items by scanned barcode
+- Editing created items
+- Deleting of items
 
-## Getting Started
+#### Track of needs:
+- Creating new needs of organization
+- Adding items from storage to new need
+- Setting deadline, goal and starting point for each item
+- Track of pogress and time left for each item and need
+#### Authorization/Registration
 
-This project is a starting point for a Flutter application.
+## Technologies
+App is built on Flutter framework.
 
-A few resources to get you started if this is your first Flutter project:
+Firebase Realtime database used to store item data \(such as name, cathegory, quantity, etc)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Firebase Storage used to store images of items
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Concepts
+Main goal of app - make it user-friendly as much as possible. 
+
+Focus is on minimization of clicks user need to make in any use case to make what he wants.
+## Demonstration
